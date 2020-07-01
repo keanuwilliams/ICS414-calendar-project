@@ -12,7 +12,7 @@ class Landing extends React.Component {
             <Image size='small' circular src="/images/meteor-logo.png"/>
           </Grid.Column>
 
-          <Grid.Column width={4}>
+          <Grid.Column width={6}>
             <Calendar/>
           </Grid.Column>
 
