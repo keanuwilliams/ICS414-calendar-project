@@ -5,7 +5,7 @@ import saveAs from 'file-saver';
  * @author Keanu Williams
  */
 
-export function createICSFile() {
+export function createSample() {
 
     // The beginning of the file
     let file =
@@ -30,6 +30,6 @@ export function createICSFile() {
     // The comment below used to suppress Blob being undefined
     // eslint-disable-next-line no-undef
     const blob = new Blob([file]);
-    saveAs(blob, 'example.ics');
+    saveAs(blob, 'sample.ics');
     return file;
 }
