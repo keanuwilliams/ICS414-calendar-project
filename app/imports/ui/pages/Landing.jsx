@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid, Button } from 'semantic-ui-react';
 import { createSample } from '../../api/ics-file/create-ics-file';
-import Calendar from react - calendar;
+import Calendar from 'react-calendar';
 
 /** A simple static component to render some text for the landing page. */
 class Landing extends React.Component {
