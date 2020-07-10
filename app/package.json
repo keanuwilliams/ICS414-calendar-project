@@ -6,6 +6,7 @@
     "classnames": "^2.2.6",
     "core-js": "^3.6.5",
     "cross-env": "^7.0.2",
+    "file-saver": "^2.0.2",
     "graphql": "^15.0.0",
     "meteor-node-stubs": "^1.0.0",
     "prop-types": "^15.7.2",
