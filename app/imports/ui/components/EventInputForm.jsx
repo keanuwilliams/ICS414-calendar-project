@@ -36,7 +36,7 @@ class EventInputForm extends React.Component {
                         required
                         placeholder='Event Name'
                     />
-                    { this.state.allDay === false ? (
+                    {this.state.allDay === false ? (
                         <Form.Group>
                             <Form.Input required label='Start Date'>
                                 <DatePicker
@@ -45,10 +45,10 @@ class EventInputForm extends React.Component {
                                     showTimeSelectOnly
                                     timeFormat='HH:mm'
                                     dateFormat='MM/d/yyyy h:mm aa'
-                                    selected={ this.state.startDate }
-                                    onChange={ this.handleStartDate }
-                                    startDate={ this.state.startDate }
-                                    endDate={ this.state.endDate }
+                                    selected={this.state.startDate}
+                                    onChange={this.handleStartDate}
+                                    startDate={this.state.startDate}
+                                    endDate={this.state.endDate}
                                 />
                             </Form.Input>
                             <Form.Input required label='End Date'>
@@ -58,42 +58,42 @@ class EventInputForm extends React.Component {
                                     showTimeSelectOnly
                                     timeFormat='HH:mm'
                                     dateFormat='MM/d/yyyy h:mm aa'
-                                    selected={ this.state.endDate }
-                                    onChange={ this.handleEndDate }
-                                    startDate={ this.state.startDate }
-                                    endDate={ this.state.endDate }
+                                    selected={this.state.endDate}
+                                    onChange={this.handleEndDate}
+                                    startDate={this.state.startDate}
+                                    endDate={this.state.endDate}
                                 />
                             </Form.Input>
                         </Form.Group>
                     ) : (
-                        <Form.Group>
-                            <Form.Input required label='Start Date'>
-                                <DatePicker
-                                    required
-                                    selectsStart
-                                    showTimeSelectOnly
-                                    selected={ this.state.startDate }
-                                    onChange={ this.handleStartDate }
-                                    startDate={ this.state.startDate }
-                                    endDate={ this.state.endDate }
-                                />
-                            </Form.Input>
-                            <Form.Input required label='End Date'>
-                                <DatePicker
-                                    required
-                                    selectsEnd
-                                    showTimeSelectOnly
-                                    selected={ this.state.endDate }
-                                    onChange={ this.handleEndDate }
-                                    startDate={ this.state.startDate }
-                                    endDate={ this.state.endDate }
-                                />
-                            </Form.Input>
-                        </Form.Group>
-                    )}
+                            <Form.Group>
+                                <Form.Input required label='Start Date'>
+                                    <DatePicker
+                                        required
+                                        selectsStart
+                                        showTimeSelectOnly
+                                        selected={this.state.startDate}
+                                        onChange={this.handleStartDate}
+                                        startDate={this.state.startDate}
+                                        endDate={this.state.endDate}
+                                    />
+                                </Form.Input>
+                                <Form.Input required label='End Date'>
+                                    <DatePicker
+                                        required
+                                        selectsEnd
+                                        showTimeSelectOnly
+                                        selected={this.state.endDate}
+                                        onChange={this.handleEndDate}
+                                        startDate={this.state.startDate}
+                                        endDate={this.state.endDate}
+                                    />
+                                </Form.Input>
+                            </Form.Group>
+                        )}
                     <Form.Field control={Checkbox}
-                                label='All Day'
-                                onChange={ this.handleAllDay }
+                        label='All Day'
+                        onChange={this.handleAllDay}
                     />
                     <Button secondary type='submit' content='Add Event' />
                 </Segment>
