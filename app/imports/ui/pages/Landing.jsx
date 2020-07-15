@@ -18,10 +18,10 @@ class Landing extends React.Component {
                     </Grid.Column>
                 </Grid.Row>
                 <Grid.Row>
-                    <Grid.Column width={10}>
+                    <Grid.Column width={8}>
                         <Planner />
                     </Grid.Column>
-                    <Grid.Column textAlign='left' width={4}>
+                    <Grid.Column textAlign='left' width={6}>
                         <EventInputForm />
                     </Grid.Column>
                 </Grid.Row>
