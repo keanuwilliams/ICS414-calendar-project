@@ -6,10 +6,12 @@ import {
   Checkbox,
   Grid,
   Header,
+  Calendar,
 } from "semantic-ui-react";
 import {
   AutoForm,
   TextField,
+  DateField,
   SelectField,
   SubmitField,
 } from "uniforms-semantic";
@@ -18,7 +20,10 @@ import SimpleSchema from "simpl-schema";
 
 const eventFormSchema = new SimpleSchema({
   eventName: String,
-  date: Date,
+  startDate: {
+    type: Date,
+    defaultValue: new Date(),
+  },
 });
 
 class EventInputForm extends React.Component {
@@ -39,6 +44,7 @@ class EventInputForm extends React.Component {
           >
             <Segment>
               <TextField name="eventName" />
+              <Calendar name="startDate" />
             </Segment>
           </AutoForm>
         </Grid.Column>
