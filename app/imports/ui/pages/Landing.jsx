@@ -1,8 +1,6 @@
 import React from 'react';
 import { Grid, Button } from 'semantic-ui-react';
-import Planner from '../components/Planner';
 import EventInputForm from '../components/EventInputForm';
-import { createSample } from '../../api/ics-file/create-ics-file';
 
 /** A simple static component to render some text for the landing page. */
 class Landing extends React.Component {
@@ -13,15 +11,11 @@ class Landing extends React.Component {
                 <Grid.Row>
                     <Grid.Column width={8}>
                         <h1>TheGoblet&apos;s Event Planner!</h1>
-                        <p>Click below to download our sample .ics file.</p>
-                        <Button content="Download" onClick={ createSample } />
+                        <p>Start creating events down below to get started.</p>
                     </Grid.Column>
                 </Grid.Row>
                 <Grid.Row>
-                    <Grid.Column width={8}>
-                        <Planner />
-                    </Grid.Column>
-                    <Grid.Column textAlign='left' width={6}>
+                    <Grid.Column textAlign='left' width={7}>
                         <EventInputForm />
                     </Grid.Column>
                 </Grid.Row>
