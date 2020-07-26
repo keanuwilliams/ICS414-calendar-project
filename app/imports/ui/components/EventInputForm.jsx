@@ -123,8 +123,8 @@ class EventInputForm extends React.Component {
          * Location
          * Priority
          * Summary [x]
-         * DTSTART
-         * DTEND
+         * DTSTART [x]
+         * DTEND [x]
          * Time zone identifier
          * RSVP
          * Sent-by
