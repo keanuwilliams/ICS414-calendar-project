@@ -8,7 +8,7 @@ class EventDisplay extends React.Component {
         return (
             <Container>
                 <Segment>
-                    <h3>Events</h3>
+                    <h3>Events (CURRENTLY DOES NOT WORK)</h3>
                         { EventInputForm.getEvents().length === 0 ? (
                             <h4>There are currently no events added.</h4>
                         ) : (

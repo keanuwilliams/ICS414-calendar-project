@@ -22,13 +22,22 @@ function createICSFile(events) {
     let file = '';
 
     if (events.length !== 0) {
+        // Begin creating the .ics file
         file =
             'BEGIN:VCALENDAR\n' +
             'VERSION:2.0\n';
 
+        // Add the timezone
+        file +=
+            'BEGIN:VTIMEZONE\n' +
+            `TZID:${new Intl.DateTimeFormat().resolvedOptions().timeZone}\n` +
+            'END:VTIMEZONE\n';
+
+        // Add the events
         for (let i = 0; i < events.length; i++) {
             file += events[i];
         }
+        // End the .ics file
         file += 'END:VCALENDAR\n';
     }
     return file;

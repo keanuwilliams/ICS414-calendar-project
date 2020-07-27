@@ -13,7 +13,8 @@ class Landing extends React.Component {
     }
 
     downloadSuccess = () => {
-        this.setState({ success: download });
+        const isSuccessful = download();
+        this.setState({ success: isSuccessful });
     }
 
     render() {
