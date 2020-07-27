@@ -4,6 +4,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 const events = []; // Events to be added to .ics file
+const eventsToDisplay = []; // Events to be displayed
 const priorityOptions = [ // The options for priority field in form
     { key: 'n', text: 'None', value: 0 },
     { key: 'l', text: 'Low', value: 6 },
@@ -101,6 +102,22 @@ class EventInputForm extends React.Component {
         console.log(event);
     }
 
+    addToEventDisplay = () => {
+
+        const start = this.state.startDate.toISOString();
+        const end = this.state.endDate.toISOString();
+
+        const event = [
+            { name: 'eventName', value: this.state.eventName },
+            { name: 'startDate', value: start },
+            { name: 'endDate', value: end },
+            { name: 'priority', value: this.state.priority },
+            { name: 'classification', value: this.state.classification },
+        ];
+        eventsToDisplay.push(event);
+        console.log(event);
+    }
+
     /** Handles the errors then submits the form. */
     submit = () => {
         // If incorrect dates and times
@@ -113,8 +130,9 @@ class EventInputForm extends React.Component {
             this.setState({ error: 'Please enter a start and end date.' });
             this.setState({ success: '' });
         } else { // Else add the event
-            // Add event to events
+            // Add event to events array for both the display and the .ics file
             this.addEvent();
+            this.addToEventDisplay();
             // Remove error message if there was one
             this.setState({ error: '' });
             // Add success message
@@ -247,7 +265,10 @@ class EventInputForm extends React.Component {
                                 value={ this.state.classification }
                             />
                         </Form.Group>
-                        <Form.Button secondary content='Add Event' />
+                        <Form.Button
+                            secondary
+                            content='Add Event'
+                        />
                     </Segment>
                 </Form>
                 {this.state.error === '' ? (
