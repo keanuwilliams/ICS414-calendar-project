@@ -129,7 +129,7 @@ class EventInputForm extends React.Component {
          * Classification (i.e., public, private, confidential)
          * Geographic Position
          * Location
-         * Priority
+         * Priority [x]
          * Summary [x]
          * DTSTART [x]
          * DTEND [x]
