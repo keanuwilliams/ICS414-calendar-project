@@ -32,6 +32,9 @@ class EventInputForm extends React.Component {
             error: '' };
     }
 
+    /** Get the events that were added by the event form */
+    static getEvents() { return events; }
+
     /** Update the form controls each time the user interacts with them. */
     handleChange = (e, { name, value }) => {
         this.setState({ [name]: value });
@@ -92,7 +95,7 @@ class EventInputForm extends React.Component {
         event +=
             `PRIORITY:${this.state.priority}\n` +
             `CLASS:${this.state.classification}\n` +
-            'END:VEVENT';
+            'END:VEVENT\n';
 
         events.push(event);
         console.log(event);
@@ -129,25 +132,6 @@ class EventInputForm extends React.Component {
             allDay: false,
             priority: 0,
             classification: 'PUBLIC' });
-    }
-
-    /** Create the .ics file to be downloaded by the user */
-    createICSFile() {
-        /** Implement required functionality
-         * Version
-         * [x] Classification (i.e., public, private, confidential)
-         * Geographic Position
-         * Location
-         * [x] Priority
-         * [x] Summary
-         * [x] DTSTART
-         * [x] DTEND
-         * Time zone identifier
-         * RSVP
-         * Sent-by
-         * Resources
-         * And aspects of recurring events
-         */
     }
 
     render() {
