@@ -1,10 +1,15 @@
 import React from 'react';
-import { Container, Form, Segment, Checkbox, Message } from 'semantic-ui-react';
+import { Container, Form, Segment, Checkbox, Select, Message } from 'semantic-ui-react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-/** The events to be added to the .ics file */
-const events = [];
+const events = []; // Events to be added to .ics file
+const priorityOptions = [ // The options for priority field in form
+    { key: 'n', text: 'None', value: 0 },
+    { key: 'l', text: 'Low', value: 6 },
+    { key: 'm', text: 'Medium', value: 5 },
+    { key: 'h', text: 'High', value: 1 },
+];
 
 class EventInputForm extends React.Component {
 
@@ -16,6 +21,7 @@ class EventInputForm extends React.Component {
             startDate: '',
             endDate: '',
             allDay: false,
+            priority: 0,
             success: '',
             error: '' };
     }
@@ -69,6 +75,7 @@ class EventInputForm extends React.Component {
                 `SUMMARY:${this.state.eventName}\n` +
                 `DTSTART;VALUE=DATE:${start}\n` +
                 `DTEND;VALUE=DATE:${end}\n` +
+                `PRIORITY:${this.state.priority}\n` +
                 'END:VEVENT';
         } else {
             event =
@@ -111,7 +118,8 @@ class EventInputForm extends React.Component {
             eventName: '',
             startDate: '',
             endDate: '',
-            allDay: false });
+            allDay: false,
+            priority: 0 });
     }
 
     /** Create the .ics file to be downloaded by the user */
@@ -144,7 +152,7 @@ class EventInputForm extends React.Component {
                             required
                             name='eventName'
                             placeholder='Event Name'
-                            value={this.state.eventName}
+                            value={ this.state.eventName }
                             onChange={ this.handleChange }
                         />
                         { this.state.allDay === false ? (
@@ -222,10 +230,19 @@ class EventInputForm extends React.Component {
                                 </Form.Input>
                             </Form.Group>
                         )}
-                        <Form.Field control={ Checkbox }
-                                    label='All Day'
-                                    onChange={ this.handleAllDay }
-                                    checked={this.state.allDay}
+                        <Form.Field
+                            control={ Checkbox }
+                            label='All Day'
+                            onChange={ this.handleAllDay }
+                            checked={this.state.allDay}
+                        />
+                        <Form.Field
+                            control={ Select }
+                            name='priority'
+                            label='Priority'
+                            options={ priorityOptions }
+                            onChange={ this.handleChange }
+                            value={ this.state.priority }
                         />
                         <Form.Button secondary content='Add Event' />
                     </Segment>
