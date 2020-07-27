@@ -45,7 +45,9 @@ class Landing extends React.Component {
                     <Grid.Column textAlign='left' width={7}>
                         <EventInputForm />
                     </Grid.Column>
-                    <Grid.Column textAlign='left' width={7}>
+                </Grid.Row>
+                <Grid.Row verticalAlign='top'>
+                    <Grid.Column textAlign='left' width={14}>
                         <EventDisplay />
                     </Grid.Column>
                 </Grid.Row>
