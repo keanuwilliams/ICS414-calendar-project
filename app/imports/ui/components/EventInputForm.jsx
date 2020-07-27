@@ -51,9 +51,6 @@ class EventInputForm extends React.Component {
 
     handleAllDay = () => this.setState((prevState) => ({ allDay: !prevState.allDay }));
 
-    /** Returns the user's timezone number (i.e., -10, -9, etc.) */
-    getTimezone = () => -(new Date().getTimezoneOffset() / 60)
-
     /** Convert user-input date to date to be used in .ics file */
     convertDate = date => {
         let icsDate; // The date to be returned
