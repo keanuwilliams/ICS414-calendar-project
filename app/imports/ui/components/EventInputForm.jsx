@@ -10,6 +10,11 @@ const priorityOptions = [ // The options for priority field in form
     { key: 'm', text: 'Medium', value: 5 },
     { key: 'h', text: 'High', value: 1 },
 ];
+const classOptions = [
+    { key: 'pub', text: 'Public', value: 'PUBLIC' },
+    { key: 'pri', text: 'Private', value: 'PRIVATE' },
+    { key: 'con', text: 'Confidential', value: 'CONFIDENTIAL' },
+];
 
 class EventInputForm extends React.Component {
 
@@ -22,6 +27,7 @@ class EventInputForm extends React.Component {
             endDate: '',
             allDay: false,
             priority: 0,
+            classification: 'PUBLIC',
             success: '',
             error: '' };
     }
@@ -69,22 +75,24 @@ class EventInputForm extends React.Component {
         const start = this.convertDate(this.state.startDate);
         const end = this.convertDate(this.state.endDate);
 
+        event =
+            'BEGIN:VEVENT\n' +
+            `SUMMARY:${this.state.eventName}\n`;
+
         if (this.state.allDay === true) {
-            event =
-                'BEGIN:VEVENT\n' +
-                `SUMMARY:${this.state.eventName}\n` +
+            event +=
                 `DTSTART;VALUE=DATE:${start}\n` +
-                `DTEND;VALUE=DATE:${end}\n` +
-                `PRIORITY:${this.state.priority}\n` +
-                'END:VEVENT';
+                `DTEND;VALUE=DATE:${end}\n`;
         } else {
-            event =
-                'BEGIN:VEVENT\n' +
-                `SUMMARY:${this.state.eventName}\n` +
+            event +=
                 `DTSTART:${start}\n` +
-                `DTEND:${end}\n` +
-                'END:VEVENT';
+                `DTEND:${end}\n`;
         }
+
+        event +=
+            `PRIORITY:${this.state.priority}\n` +
+            `CLASS:${this.state.classification}\n` +
+            'END:VEVENT';
 
         events.push(event);
         console.log(event);
@@ -119,20 +127,21 @@ class EventInputForm extends React.Component {
             startDate: '',
             endDate: '',
             allDay: false,
-            priority: 0 });
+            priority: 0,
+            classification: 'PUBLIC' });
     }
 
     /** Create the .ics file to be downloaded by the user */
     createICSFile() {
         /** Implement required functionality
          * Version
-         * Classification (i.e., public, private, confidential)
+         * [x] Classification (i.e., public, private, confidential)
          * Geographic Position
          * Location
-         * Priority [x]
-         * Summary [x]
-         * DTSTART [x]
-         * DTEND [x]
+         * [x] Priority
+         * [x] Summary
+         * [x] DTSTART
+         * [x] DTEND
          * Time zone identifier
          * RSVP
          * Sent-by
@@ -236,14 +245,24 @@ class EventInputForm extends React.Component {
                             onChange={ this.handleAllDay }
                             checked={this.state.allDay}
                         />
-                        <Form.Field
-                            control={ Select }
-                            name='priority'
-                            label='Priority'
-                            options={ priorityOptions }
-                            onChange={ this.handleChange }
-                            value={ this.state.priority }
-                        />
+                        <Form.Group>
+                            <Form.Field
+                                control={ Select }
+                                name='priority'
+                                label='Priority'
+                                options={ priorityOptions }
+                                onChange={ this.handleChange }
+                                value={ this.state.priority }
+                            />
+                            <Form.Field
+                                control={ Select }
+                                name='classification'
+                                label='Classification'
+                                options={ classOptions }
+                                onChange={ this.handleChange }
+                                value={ this.state.classification }
+                            />
+                        </Form.Group>
                         <Form.Button secondary content='Add Event' />
                     </Segment>
                 </Form>
