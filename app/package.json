@@ -2,7 +2,7 @@
   "name": "meteor-application-template-react-production",
   "private": true,
   "dependencies": {
-    "@babel/runtime": "^7.11.0",
+    "@babel/runtime": "^7.10.5",
     "classnames": "^2.2.6",
     "core-js": "^3.6.5",
     "cross-env": "^7.0.2",
@@ -36,7 +36,7 @@
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-jsx-a11y": "^6.3.1",
     "eslint-plugin-meteor": "^7.0.0",
-    "eslint-plugin-react": "^7.20.5",
+    "eslint-plugin-react": "^7.20.3",
     "eslint-plugin-react-hooks": "^4.0.8",
     "eslint-utils": "^2.1.0",
     "faker": "^4.1.0",
