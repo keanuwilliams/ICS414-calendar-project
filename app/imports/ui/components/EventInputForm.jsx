@@ -126,14 +126,14 @@ class EventInputForm extends React.Component {
     const start = this.state.startDate.toISOString();
     const end = this.state.endDate.toISOString();
 
-    const event = [
-      { key: 'eventName', value: this.state.eventName },
-      { key: 'startDate', value: start },
-      { key: 'endDate', value: end },
-      { key: 'priority', value: this.state.priority },
-      { key: 'classification', value: this.state.classification },
-      { key: 'guests', value: this.state.guests },
-    ];
+    const event = {
+      eventName: this.state.eventName,
+      startDate: start,
+      endDate: end,
+      priority: this.state.priority,
+      class: this.state.classification,
+      guests: this.state.guests,
+    };
 
     eventsToDisplay.push(event);
     console.log(event);
