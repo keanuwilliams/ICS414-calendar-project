@@ -31,7 +31,7 @@ function createICSFile(events) {
    * [x] DTSTART
    * [x] DTEND
    * [x] Time zone identifier
-   * RSVP
+   * [x] RSVP
    * Sent-by
    * Resources
    * And aspects of recurring events
