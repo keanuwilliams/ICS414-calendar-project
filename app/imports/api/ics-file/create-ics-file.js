@@ -30,7 +30,7 @@ function createICSFile(events) {
    * [x] Summary
    * [x] DTSTART
    * [x] DTEND
-   * [x] Time zone identifier
+   * [?] Time zone identifier
    * [x] RSVP
    * Sent-by
    * Resources
@@ -68,27 +68,7 @@ function createICSFile(events) {
       'DTSTART:20201101T020000\n' +
       `TZOFFSETTO:${getTimezone(false)}\n` +
       'END:STANDARD\n' +
-      'BEGIN:DAYLIGHT\n';
-
-    file +=
-      `TZOFFSETFROM:${getTimezone(false)}\n` +
-      'DTSTART:20200308T020000\n';
-
-    // Check if timezone is one that doesn't observe daylight savings
-    if (tzid === 'Pacific/Honolulu' ||
-      tzid === 'America/Juneau' ||
-      tzid === 'America/Puerto_Rico' ||
-      tzid === 'America/St_Johns') {
-
-      file += `TZOFFSETTO:${getTimezone(false)}\n`;
-    } else {
-      file += `TZOFFSETTO:${getTimezone(true)}\n`;
-    }
-
-    file += 'END:DAYLIGHT\n';
-
-    // End timezone
-    file += 'END:VTIMEZONE\n';
+      'END:TIMEZONE\n';
 
     // Add the events
     for (let i = 0; i < events.length; i++) {
