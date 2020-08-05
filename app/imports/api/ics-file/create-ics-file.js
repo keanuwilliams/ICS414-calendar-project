@@ -19,6 +19,60 @@ function getTimezone(dst) {
   return offset;
 }
 
+/** Convert user-input date to date to be used in .ics file */
+function convertDate(date, allDay) {
+  let icsDate; // The date to be returned
+  const dateString = date;
+  const year = dateString.substr(0, 4);
+  const day = dateString.substr(8, 2);
+  const month = dateString.substr(5, 2);
+  if (!allDay) {
+    const hour = dateString.substr(11, 2);
+    const min = dateString.substr(14, 2);
+    const time = `T${hour}${min}00Z`;
+    icsDate = year + month + day + time;
+  } else {
+    icsDate = year + month + day;
+  }
+  return icsDate;
+}
+
+/** Make .ics file event components given event */
+function convertEvent(event) {
+  let eventICS; // Event to be added
+  const start = convertDate(event.startDate, event.allDay);
+  const end = convertDate(event.endDate, event.allDay);
+
+  // Begin adding event
+  eventICS = `BEGIN:VEVENT\nSUMMARY:${event.eventName}\n`;
+
+  // Add start and end date
+  if (event.allDay) {
+    eventICS += `DTSTART;VALUE=DATE:${start}\nDTEND;VALUE=DATE:${end}\n`;
+  } else {
+    eventICS += `DTSTART:${start}\nDTEND:${end}\n`;
+  }
+
+  // Add organizer
+  if (event.organizer !== '') {
+    eventICS += `ORGANIZER:MAILTO:${event.organizer}\n`;
+  }
+
+  // Add attendees
+  for (let i = 0; i < event.guests.length; i++) {
+    eventICS += `ATTENDEE;RSVP=${event.rsvp.toString().toUpperCase()}:mailto:${event.guests[i]}\n`;
+  }
+
+  // Add priority and classification then end
+  eventICS +=
+    `PRIORITY:${event.priority}\n` +
+    `CLASS:${event.classification}\n` +
+    'END:VEVENT\n';
+
+  console.log(eventICS);
+  return eventICS;
+}
+
 /** Create the .ics file to be downloaded by the user */
 function createICSFile(events) {
   /** Implement required functionality
@@ -72,7 +126,7 @@ function createICSFile(events) {
 
     // Add the events
     for (let i = 0; i < events.length; i++) {
-      file += events[i];
+      file += convertEvent(events[i]);
     }
     // End the .ics file
     file += 'END:VCALENDAR\n';

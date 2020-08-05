@@ -16,7 +16,6 @@ import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 import 'react-google-places-autocomplete/dist/index.min.css';
 
 const events = []; // Events to be added to .ics file
-const eventsToDisplay = []; // Events to be displayed
 const priorityOptions = [
   // The options for priority field in form
   { key: 'n', text: 'None', value: 0 },
@@ -74,62 +73,8 @@ class EventInputForm extends React.Component {
 
   handleRSVP = () => this.setState((prevState) => ({ rsvp: !prevState.rsvp }));
 
-  /** Convert user-input date to date to be used in .ics file */
-  convertDate = (date) => {
-    let icsDate; // The date to be returned
-    const dateString = date.toISOString();
-    const year = dateString.substr(0, 4);
-    const day = dateString.substr(8, 2);
-    const month = dateString.substr(5, 2);
-    if (this.state.allDay === false) {
-      const hour = dateString.substr(11, 2);
-      const min = dateString.substr(14, 2);
-      const time = `T${hour}${min}00Z`;
-      icsDate = year + month + day + time;
-    } else {
-      icsDate = year + month + day;
-    }
-    return icsDate;
-  };
-
   /** Add an event to the events array */
   addEvent = () => {
-    let event; // Event to be added
-    const start = this.convertDate(this.state.startDate);
-    const end = this.convertDate(this.state.endDate);
-
-    // Begin adding event
-    event = `BEGIN:VEVENT\nSUMMARY:${this.state.eventName}\n`;
-
-    // Add start and end date
-    if (this.state.allDay) {
-      event += `DTSTART;VALUE=DATE:${start}\nDTEND;VALUE=DATE:${end}\n`;
-    } else {
-      event += `DTSTART:${start}\nDTEND:${end}\n`;
-    }
-
-    // Add organizer
-    if (this.state.organizerAdded) {
-      event += `ORGANIZER:MAILTO:${this.state.organizer}\n`;
-    }
-
-    // Add attendees
-    for (let i = 0; i < this.state.guests.length; i++) {
-      event += `ATTENDEE;RSVP=${this.state.rsvp.toString().toUpperCase()}:mailto:${this.state.guests[i]}\n`;
-    }
-
-    // Add priority and classification then end
-    event +=
-      `PRIORITY:${this.state.priority}\n` +
-      `CLASS:${this.state.classification}\n` +
-      'END:VEVENT\n';
-
-    this.forceUpdate();
-    events.push(event);
-    console.log(event);
-  };
-
-  addToEventDisplay = () => {
     const start = this.state.startDate.toISOString();
     const end = this.state.endDate.toISOString();
 
@@ -137,14 +82,17 @@ class EventInputForm extends React.Component {
       eventName: this.state.eventName,
       startDate: start,
       endDate: end,
+      allDay: this.state.allDay,
       priority: this.state.priority,
-      class: this.state.classification,
+      classification: this.state.classification,
       organizer: this.state.organizer,
       guests: this.state.guests,
+      rsvp: this.state.rsvp,
     };
 
-    eventsToDisplay.push(event);
+    events.push(event);
     console.log(event);
+    this.forceUpdate();
   };
 
   /** Code from https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
@@ -208,7 +156,6 @@ class EventInputForm extends React.Component {
       // Else add the event
       // Add event to events array for both the display and the .ics file
       this.addEvent();
-      this.addToEventDisplay();
       // Remove error message if there was one
       this.setState({ error: '' });
       // Add success message
