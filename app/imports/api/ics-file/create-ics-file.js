@@ -56,7 +56,7 @@ function convertEvent(event) {
   // Add organizer
   if (event.organizer !== '') {
     if (event.organizer !== event.userEmail) {
-      eventICS += `ORGANIZER;SENT-BY="${event.userEmail}"MAILTO:${event.organizer}\n`;
+      eventICS += `ORGANIZER;SENT-BY="${event.userEmail}:"mailto:${event.organizer}\n`;
       eventICS += `ATTENDEE;RSVP=${event.rsvp.toString().toUpperCase()}:mailto:${event.userEmail}\n`;
     } else {
       eventICS += `ORGANIZER:MAILTO:${event.userEmail}\n`;

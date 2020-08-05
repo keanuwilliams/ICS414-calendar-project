@@ -242,7 +242,7 @@ class EventInputForm extends React.Component {
           <Grid.Row centered>
             <h2>Before you create your account, please enter your email address.</h2>
             <Input
-              style={{ width: '70%' }}
+              style={{ width: '40%' }}
               name='userEmail'
               type='email'
               placeholder='Your Email'
@@ -251,7 +251,7 @@ class EventInputForm extends React.Component {
             />
             <Button
               secondary
-              content='Use'
+              content='Use Email'
               color='grey'
               onClick={this.addUserEmail}
             />
