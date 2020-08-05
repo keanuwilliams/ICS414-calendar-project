@@ -42,6 +42,8 @@ class EventInputForm extends React.Component {
       allDay: false,
       priority: 0,
       classification: 'PUBLIC',
+      organizer: '',
+      organizerAdded: false,
       guest: '',
       rsvp: false,
       guests: [],
@@ -100,10 +102,15 @@ class EventInputForm extends React.Component {
     event = `BEGIN:VEVENT\nSUMMARY:${this.state.eventName}\n`;
 
     // Add start and end date
-    if (this.state.allDay === true) {
+    if (this.state.allDay) {
       event += `DTSTART;VALUE=DATE:${start}\nDTEND;VALUE=DATE:${end}\n`;
     } else {
       event += `DTSTART:${start}\nDTEND:${end}\n`;
+    }
+
+    // Add organizer
+    if (this.state.organizerAdded) {
+      event += `ORGANIZER:MAILTO:${this.state.organizer}\n`;
     }
 
     // Add attendees
@@ -132,6 +139,7 @@ class EventInputForm extends React.Component {
       endDate: end,
       priority: this.state.priority,
       class: this.state.classification,
+      organizer: this.state.organizer,
       guests: this.state.guests,
     };
 
@@ -146,12 +154,28 @@ class EventInputForm extends React.Component {
     return re.test(String(email).toLowerCase());
   }
 
+  /** Add organizer to event */
+  addOrganizer = () => {
+    if (this.state.organizer === '') {
+      this.setState({ error: 'organizer email is empty.' });
+    } else if (!this.validateEmail(this.state.organizer)) {
+      this.setState({ error: 'organizer email is invalid.' });
+    } else {
+      this.setState({ error: '', organizerAdded: true });
+      this.forceUpdate();
+    }
+  }
+
+  removeOrganizer = () => {
+    this.setState({ organizer: '', organizerAdded: false });
+  }
+
   /** Add guest to guest array */
   addGuest = () => {
     if (this.state.guest === '') {
-      this.setState({ error: 'email is empty.' });
+      this.setState({ error: 'guest email is empty.' });
     } else if (!this.validateEmail(this.state.guest)) {
-      this.setState({ error: 'email is invalid.' });
+      this.setState({ error: 'guest email is invalid.' });
     } else {
       this.state.guests.push(this.state.guest);
       this.setState({ error: '', guest: '' });
@@ -204,6 +228,8 @@ class EventInputForm extends React.Component {
       allDay: false,
       priority: 0,
       classification: 'PUBLIC',
+      organizer: '',
+      organizerAdded: false,
       guest: '',
       rsvp: false,
       guests: [],
@@ -330,38 +356,65 @@ class EventInputForm extends React.Component {
             </Form>
           </Grid.Column>
           <Grid.Column width={6} id='guests'>
-            <Segment secondary>
-              <h4>Guests</h4>
-              <Input
-                name='guest'
-                type='email'
-                placeholder='Add Guest Email'
-                onChange={this.handleChange}
-                value={this.state.guest}
-              />
-              <Button
-                content='Add'
-                color='grey'
-                onClick={this.addGuest}
-              />
-              <Checkbox
-                label='RSVP'
-                style={{ paddingTop: '10px' }}
-                checked={this.state.rsvp}
-                onChange={this.handleRSVP}
-              />
-              {this.state.guests.length === 0 ? ('') : (
-                this.state.guests.map((e, i) => (
-                  <div id='guests' key={i}>
-                    <Card
-                      color='blue'
-                      description={e}
-                      onClick={this.removeGuest}
+            <Segment.Group>
+              <Segment secondary>
+                <h4>Organizer</h4>
+                {this.state.organizerAdded === false ? (
+                  <div>
+                    <Input
+                      name='organizer'
+                      type='email'
+                      placeholder='Organizer&apos;s email'
+                      onChange={this.handleChange}
+                      value={this.state.organizer}
+                    />
+                    <Button
+                      content='Use'
+                      color='grey'
+                      onClick={this.addOrganizer}
                     />
                   </div>
-                ))
+                ) : (
+                  <div>
+                    {this.state.organizer} (<a style={{ color: 'red' }} onClick={this.removeOrganizer}>x</a>)
+                  </div>
+                )}
+              </Segment>
+              {this.state.organizerAdded === false ? ('') : (
+                <Segment secondary>
+                  <h4>Guests</h4>
+                  <Input
+                    name='guest'
+                    type='email'
+                    placeholder='Add Guest Email'
+                    onChange={this.handleChange}
+                    value={this.state.guest}
+                  />
+                  <Button
+                    content='Add'
+                    color='grey'
+                    onClick={this.addGuest}
+                  />
+                  <Checkbox
+                    label='RSVP'
+                    style={{ paddingTop: '10px' }}
+                    checked={this.state.rsvp}
+                    onChange={this.handleRSVP}
+                  />
+                  {this.state.guests.length === 0 ? ('') : (
+                    this.state.guests.map((e, i) => (
+                      <div id='guests' key={i}>
+                        <Card
+                          color='blue'
+                          description={e}
+                          onClick={this.removeGuest}
+                        />
+                      </div>
+                    ))
+                  )}
+                </Segment>
               )}
-            </Segment>
+            </Segment.Group>
           </Grid.Column>
         </Grid.Row>
         <Grid.Row>
