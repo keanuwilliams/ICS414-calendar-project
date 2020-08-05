@@ -37,7 +37,6 @@ class Landing extends React.Component {
                 </Grid.Row>
                 <Grid.Row verticalAlign='top'>
                     <Grid.Column textAlign='left' width={12}>
-                        <EventInputForm />
                         { this.state.success !== true ? (
                           <Grid.Row>
                               <Grid.Column textAlign='left' width={14}>
@@ -49,6 +48,7 @@ class Landing extends React.Component {
                               </Grid.Column>
                           </Grid.Row>
                         ) : ('')}
+                        <EventInputForm />
                     </Grid.Column>
                 </Grid.Row>
                 <Grid.Row verticalAlign='top'>

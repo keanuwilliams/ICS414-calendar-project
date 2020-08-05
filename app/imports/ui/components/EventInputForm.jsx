@@ -188,6 +188,24 @@ class EventInputForm extends React.Component {
     return (
       <Grid>
         <Grid.Row>
+          <Grid.Column width={16}>
+            {this.state.error === '' ? ('') : (
+              <Message
+                error
+                style={messageStyle}
+                header={`ERROR: ${this.state.error}`}
+              />
+            )}
+            {this.state.success === '' ? ('') : (
+              <Message
+                success
+                style={messageStyle}
+                header={`SUCCESS: ${this.state.success}`}
+              />
+            )}
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Row>
           <Grid.Column width={10}>
             <Form onSubmit={this.submit}>
               <Segment>
@@ -362,24 +380,6 @@ class EventInputForm extends React.Component {
                 </Segment>
               )}
             </Segment.Group>
-          </Grid.Column>
-        </Grid.Row>
-        <Grid.Row>
-          <Grid.Column width={16}>
-            {this.state.error === '' ? ('') : (
-              <Message
-                error
-                style={messageStyle}
-                header={`ERROR: ${this.state.error}`}
-              />
-            )}
-            {this.state.success === '' ? ('') : (
-              <Message
-                success
-                style={messageStyle}
-                header={`SUCCESS: ${this.state.success}`}
-              />
-            )}
           </Grid.Column>
         </Grid.Row>
       </Grid>
