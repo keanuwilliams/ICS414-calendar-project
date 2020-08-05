@@ -240,7 +240,7 @@ class EventInputForm extends React.Component {
           </Grid.Row>
         {!this.state.userEmailAdded ? (
           <Grid.Row centered>
-            <h2>Before you create your account, please enter your email address.</h2>
+            <h2>Before you are able to create an event, please enter your email address.</h2>
             <Input
               style={{ width: '40%' }}
               name='userEmail'
