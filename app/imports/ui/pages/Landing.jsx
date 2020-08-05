@@ -51,11 +51,6 @@ class Landing extends React.Component {
                         <EventInputForm />
                     </Grid.Column>
                 </Grid.Row>
-                <Grid.Row verticalAlign='top'>
-                    <Grid.Column textAlign='left' width={14}>
-                        <EventDisplay />
-                    </Grid.Column>
-                </Grid.Row>
             </Grid>
         );
     }

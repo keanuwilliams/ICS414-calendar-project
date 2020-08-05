@@ -55,7 +55,12 @@ function convertEvent(event) {
 
   // Add organizer
   if (event.organizer !== '') {
-    eventICS += `ORGANIZER:MAILTO:${event.organizer}\n`;
+    if (event.organizer !== event.userEmail) {
+      eventICS += `ORGANIZER;SENT-BY="${event.userEmail}"MAILTO:${event.organizer}\n`;
+      eventICS += `ATTENDEE;RSVP=${event.rsvp.toString().toUpperCase()}:mailto:${event.userEmail}\n`;
+    } else {
+      eventICS += `ORGANIZER:MAILTO:${event.userEmail}\n`;
+    }
   }
 
   // Add attendees
@@ -69,7 +74,6 @@ function convertEvent(event) {
     `CLASS:${event.classification}\n` +
     'END:VEVENT\n';
 
-  console.log(eventICS);
   return eventICS;
 }
 
@@ -86,7 +90,7 @@ function createICSFile(events) {
    * [x] DTEND
    * [?] Time zone identifier
    * [x] RSVP
-   * Sent-by
+   * [x] Sent-by
    * Resources
    * And aspects of recurring events
    */
@@ -137,12 +141,20 @@ function createICSFile(events) {
 /** Allows the user to save the file */
 export function download() {
   const icsFile = createICSFile(EventInputForm.getEvents());
+  const userEmail = EventInputForm.getUserEmail();
   let success = false;
   if (icsFile !== '') {
-    // The comment below used to suppress Blob being undefined
-    // eslint-disable-next-line no-undef
-    const blob = new Blob([icsFile]);
-    saveAs(blob, 'events.ics');
+    if (userEmail === '') {
+      // The comment below used to suppress Blob being undefined
+      // eslint-disable-next-line no-undef
+      const blob = new Blob([icsFile]);
+      saveAs(blob, 'events.ics');
+    } else {
+      // The comment below used to suppress Blob being undefined
+      // eslint-disable-next-line no-undef
+      const blob = new Blob([icsFile]);
+      saveAs(blob, `${userEmail}.ics`);
+    }
     success = true;
   }
   return success;
