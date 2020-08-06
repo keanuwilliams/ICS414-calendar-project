@@ -38,8 +38,8 @@ class EventInputForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      userEmail: 'kananu.williams@gmail.com',
-      userEmailAdded: true,
+      userEmail: '',
+      userEmailAdded: false,
       userIsOrganizer: false,
       eventName: '',
       startDate: '',
