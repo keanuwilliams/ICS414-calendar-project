@@ -6,7 +6,6 @@ import {
 } from 'semantic-ui-react';
 import { download } from '../../api/ics-file/create-ics-file';
 import EventInputForm from '../components/EventInputForm';
-import EventDisplay from '../components/EventDisplay';
 
 /** A simple static component to render some text for the landing page. */
 class Landing extends React.Component {
@@ -36,7 +35,7 @@ class Landing extends React.Component {
                     </Grid.Column>
                 </Grid.Row>
                 <Grid.Row verticalAlign='top'>
-                    <Grid.Column textAlign='left' width={12}>
+                    <Grid.Column textAlign='left' width={16}>
                         { this.state.success !== true ? (
                           <Grid.Row>
                               <Grid.Column textAlign='left' width={14}>

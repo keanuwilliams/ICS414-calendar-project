@@ -8,6 +8,7 @@ import {
   Select,
   Input,
   Button,
+  Table,
   Message,
 } from 'semantic-ui-react';
 import DatePicker from 'react-datepicker';
@@ -109,7 +110,6 @@ class EventInputForm extends React.Component {
     };
 
     events.push(event);
-    console.log(event);
     this.forceUpdate();
   };
 
@@ -240,9 +240,14 @@ class EventInputForm extends React.Component {
           </Grid.Row>
         {!this.state.userEmailAdded ? (
           <Grid.Row centered>
-            <h2>Before you are able to create an event, please enter your email address.</h2>
+            <div>
+              <h2>Before you are able to create an event, please enter your email address.</h2>
+              <h3 style={{ color: 'red', marginTop: '-5px' }}>
+                You will not be able to change it, unless you refresh the page.
+              </h3>
+            </div>
             <Input
-              style={{ width: '40%' }}
+              style={{ width: '35%', marginTop: '10px', fontSize: '18px' }}
               name='userEmail'
               type='email'
               placeholder='Your Email'
@@ -251,14 +256,15 @@ class EventInputForm extends React.Component {
             />
             <Button
               secondary
+              style={{ marginTop: '10px', fontSize: '18px' }}
               content='Use Email'
               color='grey'
               onClick={this.addUserEmail}
             />
           </Grid.Row>
         ) : (
-            <Grid.Row>
-              <Grid.Column width={10}>
+            <Grid.Row centered>
+              <Grid.Column width={8}>
                 <Form onSubmit={this.submit}>
                   <Segment>
                     <h3>Create Event</h3>
@@ -372,7 +378,7 @@ class EventInputForm extends React.Component {
                   </Segment>
                 </Form>
               </Grid.Column>
-              <Grid.Column width={6} id='guests'>
+              <Grid.Column width={5} id='guests'>
                 <Segment.Group>
                   <Segment secondary>
                     <h4>Your Email</h4>
@@ -383,7 +389,7 @@ class EventInputForm extends React.Component {
                   <Segment secondary>
                     <h4>Organizer</h4>
                     {!this.state.organizerAdded ? (
-                      <div id='organizer'>
+                      <div>
                         <Input
                           name='organizer'
                           type='email'
@@ -444,6 +450,97 @@ class EventInputForm extends React.Component {
                     </Segment>
                   )}
                 </Segment.Group>
+              </Grid.Column>
+              <Grid.Column width={16} style={{ paddingTop: '10px' }}>
+                <Segment>
+                  <h3>Added Events</h3>
+                  {events.length === 0 ? (
+                    <h4 style={{ color: 'grey', marginTop: '5px' }}>
+                      There are currently no events added.
+                    </h4>
+                  ) : (
+                    <Table celled>
+                      <Table.Header>
+                        <Table.Row>
+                          <Table.HeaderCell>
+                            Name
+                          </Table.HeaderCell>
+                          <Table.HeaderCell>
+                            Start Date
+                          </Table.HeaderCell>
+                          <Table.HeaderCell>
+                            End Date
+                          </Table.HeaderCell>
+                          <Table.HeaderCell>
+                            Organizer
+                          </Table.HeaderCell>
+                          <Table.HeaderCell>
+                            Guests
+                          </Table.HeaderCell>
+                          <Table.HeaderCell>
+                            RSVP
+                          </Table.HeaderCell>
+                          <Table.HeaderCell>
+                            Priority
+                          </Table.HeaderCell>
+                          <Table.HeaderCell>
+                            Class
+                          </Table.HeaderCell>
+                        </Table.Row>
+                      </Table.Header>
+                      <Table.Body>
+                        {events.map((e, i) => (
+                          <Table.Row key={i}>
+                            <Table.Cell>
+                              {e.eventName}
+                            </Table.Cell>
+                            <Table.Cell>
+                              {(e.allDay) ? (
+                                e.startDate.substr(0, 10)
+                              ) : (
+                                `${e.startDate.substr(0, 10)}\n${e.startDate.substr(11, 5)} (UTC)`
+                              )}
+                            </Table.Cell>
+                            <Table.Cell>
+                              {(e.allDay) ? (
+                                e.endDate.substr(0, 10)
+                              ) : (
+                                `${e.endDate.substr(0, 10)}\n${e.endDate.substr(11, 5)} (UTC)`
+                              )}
+                            </Table.Cell>
+                            <Table.Cell>
+                              {e.organizer === '' ? (
+                                'N/A'
+                              ) : (
+                                e.organizer
+                              )}
+                            </Table.Cell>
+                            <Table.Cell>
+                              {e.guests.length === 0 ? (
+                                'N/A'
+                              ) : (
+                                e.guests.map((c, n) => (
+                                    <div key={n}>
+                                      { c } <br/>
+                                    </div>
+                                  ))
+                              )}
+                            </Table.Cell>
+                            <Table.Cell>
+                              <Checkbox checked={e.rsvp} />
+                            </Table.Cell>
+                            <Table.Cell>
+                              {e.priority}
+                            </Table.Cell>
+                            <Table.Cell>
+                              {e.classification}
+                            </Table.Cell>
+                          </Table.Row>
+                        ))}
+                      </Table.Body>
+                    </Table>
+                  )}
+                </Segment>
               </Grid.Column>
             </Grid.Row>
         )}
