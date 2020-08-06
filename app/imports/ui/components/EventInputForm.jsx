@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Grid,
   Card,
@@ -9,44 +9,44 @@ import {
   Input,
   Button,
   Message,
-} from 'semantic-ui-react';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
-import 'react-google-places-autocomplete/dist/index.min.css';
+} from "semantic-ui-react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import GooglePlacesAutocomplete from "react-google-places-autocomplete";
+import "react-google-places-autocomplete/dist/index.min.css";
 
 const events = []; // Events to be added to .ics file
 const eventsToDisplay = []; // Events to be displayed
 const priorityOptions = [
   // The options for priority field in form
-  { key: 'n', text: 'None', value: 0 },
-  { key: 'l', text: 'Low', value: 6 },
-  { key: 'm', text: 'Medium', value: 5 },
-  { key: 'h', text: 'High', value: 1 },
+  { key: "n", text: "None", value: 0 },
+  { key: "l", text: "Low", value: 6 },
+  { key: "m", text: "Medium", value: 5 },
+  { key: "h", text: "High", value: 1 },
 ];
 const classOptions = [
-  { key: 'pub', text: 'Public', value: 'PUBLIC' },
-  { key: 'pri', text: 'Private', value: 'PRIVATE' },
-  { key: 'con', text: 'Confidential', value: 'CONFIDENTIAL' },
+  { key: "pub", text: "Public", value: "PUBLIC" },
+  { key: "pri", text: "Private", value: "PRIVATE" },
+  { key: "con", text: "Confidential", value: "CONFIDENTIAL" },
 ];
 
 class EventInputForm extends React.Component {
-
   /** Initialize state fields. */
   constructor(props) {
     super(props);
     this.state = {
-      eventName: '',
-      startDate: '',
-      endDate: '',
+      eventName: "",
+      location: "",
+      startDate: "",
+      endDate: "",
       allDay: false,
       priority: 0,
-      classification: 'PUBLIC',
-      guest: '',
+      classification: "PUBLIC",
+      guest: "",
       rsvp: false,
       guests: [],
-      success: '',
-      error: '',
+      success: "",
+      error: "",
     };
   }
 
@@ -68,7 +68,8 @@ class EventInputForm extends React.Component {
     this.setState({ endDate: date });
   };
 
-  handleAllDay = () => this.setState((prevState) => ({ allDay: !prevState.allDay }));
+  handleAllDay = () =>
+    this.setState((prevState) => ({ allDay: !prevState.allDay }));
 
   handleRSVP = () => this.setState((prevState) => ({ rsvp: !prevState.rsvp }));
 
@@ -108,14 +109,16 @@ class EventInputForm extends React.Component {
 
     // Add attendees
     for (let i = 0; i < this.state.guests.length; i++) {
-      event += `ATTENDEE;RSVP=${this.state.rsvp.toString().toUpperCase()}:mailto:${this.state.guests[i]}\n`;
+      event += `ATTENDEE;RSVP=${this.state.rsvp
+        .toString()
+        .toUpperCase()}:mailto:${this.state.guests[i]}\n`;
     }
 
     // Add priority and classification then end
     event +=
       `PRIORITY:${this.state.priority}\n` +
       `CLASS:${this.state.classification}\n` +
-      'END:VEVENT\n';
+      "END:VEVENT\n";
 
     this.forceUpdate();
     events.push(event);
@@ -148,22 +151,22 @@ class EventInputForm extends React.Component {
 
   /** Add guest to guest array */
   addGuest = () => {
-    if (this.state.guest === '') {
-      this.setState({ error: 'email is empty.' });
+    if (this.state.guest === "") {
+      this.setState({ error: "email is empty." });
     } else if (!this.validateEmail(this.state.guest)) {
-      this.setState({ error: 'email is invalid.' });
+      this.setState({ error: "email is invalid." });
     } else {
       this.state.guests.push(this.state.guest);
-      this.setState({ error: '', guest: '' });
+      this.setState({ error: "", guest: "" });
       this.forceUpdate();
     }
-  }
+  };
 
   /** Remove guest from guest array */
   removeGuest = (c, v) => {
     this.state.guests.splice(this.state.guests.indexOf(v.description), 1);
     this.forceUpdate();
-  }
+  };
 
   /** Handles the errors then submits the form. */
   submit = () => {
@@ -173,20 +176,20 @@ class EventInputForm extends React.Component {
       this.state.allDay === false
     ) {
       // Display error message
-      this.setState({ error: 'the start date begins after the end date.' });
-      this.setState({ success: '' });
-    } else if (this.state.startDate === '' || this.state.endDate === '') {
+      this.setState({ error: "the start date begins after the end date." });
+      this.setState({ success: "" });
+    } else if (this.state.startDate === "" || this.state.endDate === "") {
       // If dates are empty
       // Display error message
-      this.setState({ error: 'please enter a start and end date.' });
-      this.setState({ success: '' });
+      this.setState({ error: "please enter a start and end date." });
+      this.setState({ success: "" });
     } else {
       // Else add the event
       // Add event to events array for both the display and the .ics file
       this.addEvent();
       this.addToEventDisplay();
       // Remove error message if there was one
-      this.setState({ error: '' });
+      this.setState({ error: "" });
       // Add success message
       this.setState({
         success: `'${this.state.eventName}' successfully added.`,
@@ -198,20 +201,20 @@ class EventInputForm extends React.Component {
   /** Reset the form */
   resetForm = () => {
     this.setState({
-      eventName: '',
-      startDate: '',
-      endDate: '',
+      eventName: "",
+      startDate: "",
+      endDate: "",
       allDay: false,
       priority: 0,
-      classification: 'PUBLIC',
-      guest: '',
+      classification: "PUBLIC",
+      guest: "",
       rsvp: false,
       guests: [],
     });
   };
 
   render() {
-    const messageStyle = { marginBottom: '30px' };
+    const messageStyle = { marginBottom: "30px" };
     return (
       <Grid>
         <Grid.Row>
@@ -221,20 +224,24 @@ class EventInputForm extends React.Component {
                 <h3>Create Event</h3>
                 <Form.Input
                   required
-                  name='eventName'
-                  placeholder='Event Name'
+                  name="eventName"
+                  placeholder="Event Name"
                   value={this.state.eventName}
                   onChange={this.handleChange}
                 />
+                <div>
+                  <label style={{ fontWeight: "bold" }}>Location</label>
+                </div>
+                <GooglePlacesAutocomplete apiKey="AIzaSyDUy3PQMDR4Q_wx-8ZSH0p45R8_qgQRNx0" />
                 {this.state.allDay === false ? (
                   <Form.Group>
                     {/* The Start Date Input */}
-                    <Form.Input required label='Start Date'>
+                    <Form.Input required label="Start Date">
                       <DatePicker
                         isClearable
-                        name='startDate'
-                        placeholderText='Start Date'
-                        todayButton='Today'
+                        name="startDate"
+                        placeholderText="Start Date"
+                        todayButton="Today"
                         selected={this.state.startDate}
                         onChange={this.startDateChange}
                         selectsStart
@@ -243,16 +250,16 @@ class EventInputForm extends React.Component {
                         maxDate={this.state.endDate}
                         showTimeSelect
                         timeIntervals={15}
-                        dateFormat='MM/dd/yyyy hh:mm aa'
+                        dateFormat="MM/dd/yyyy hh:mm aa"
                       />
                     </Form.Input>
                     {/* The End Date Input */}
-                    <Form.Input required label='End Date'>
+                    <Form.Input required label="End Date">
                       <DatePicker
                         isClearable
-                        name='endDate'
-                        placeholderText='End Date'
-                        todayButton='Today'
+                        name="endDate"
+                        placeholderText="End Date"
+                        todayButton="Today"
                         selected={this.state.endDate}
                         onChange={this.endDateChange}
                         selectsEnd
@@ -261,119 +268,119 @@ class EventInputForm extends React.Component {
                         minDate={this.state.startDate}
                         showTimeSelect
                         timeIntervals={15}
-                        dateFormat='MM/dd/yyyy hh:mm aa'
+                        dateFormat="MM/dd/yyyy hh:mm aa"
                       />
                     </Form.Input>
                   </Form.Group>
                 ) : (
                   <Form.Group>
                     {/* The Start Date Input */}
-                    <Form.Input fluid required label='Start Date'>
+                    <Form.Input fluid required label="Start Date">
                       <DatePicker
                         isClearable
-                        name='startDate'
-                        placeholderText='Start Date'
-                        todayButton='Today'
+                        name="startDate"
+                        placeholderText="Start Date"
+                        todayButton="Today"
                         selected={this.state.startDate}
                         onChange={this.startDateChange}
                         selectsStart
                         startDate={this.state.startDate}
                         endDate={this.state.endDate}
                         maxDate={this.state.endDate}
-                        dateFormat='MM/dd/yyyy'
+                        dateFormat="MM/dd/yyyy"
                       />
                     </Form.Input>
                     {/* The End Date Input */}
-                    <Form.Input fluid required label='End Date'>
+                    <Form.Input fluid required label="End Date">
                       <DatePicker
                         isClearable
-                        name='endDate'
-                        placeholderText='End Date'
-                        todayButton='Today'
+                        name="endDate"
+                        placeholderText="End Date"
+                        todayButton="Today"
                         selected={this.state.endDate}
                         onChange={this.endDateChange}
                         selectsEnd
                         startDate={this.state.startDate}
                         endDate={this.state.endDate}
                         minDate={this.state.startDate}
-                        dateFormat='MM/dd/yyyy'
+                        dateFormat="MM/dd/yyyy"
                       />
                     </Form.Input>
                   </Form.Group>
                 )}
                 <Form.Field
                   control={Checkbox}
-                  label='All Day'
+                  label="All Day"
                   onChange={this.handleAllDay}
                   checked={this.state.allDay}
                 />
                 <Form.Group>
                   <Form.Field
                     control={Select}
-                    name='priority'
-                    label='Priority'
+                    name="priority"
+                    label="Priority"
                     options={priorityOptions}
                     onChange={this.handleChange}
                     value={this.state.priority}
                   />
                   <Form.Field
                     control={Select}
-                    name='classification'
-                    label='Classification'
+                    name="classification"
+                    label="Classification"
                     options={classOptions}
                     onChange={this.handleChange}
                     value={this.state.classification}
                   />
                 </Form.Group>
-                <Form.Button secondary content='Add Event' />
+                <Form.Button secondary content="Add Event" />
               </Segment>
             </Form>
           </Grid.Column>
-          <Grid.Column width={6} id='guests'>
+          <Grid.Column width={6} id="guests">
             <Segment secondary>
               <h4>Guests</h4>
               <Input
-                name='guest'
-                type='email'
-                placeholder='Add Guest Email'
+                name="guest"
+                type="email"
+                placeholder="Add Guest Email"
                 onChange={this.handleChange}
                 value={this.state.guest}
               />
-              <Button
-                content='Add'
-                color='grey'
-                onClick={this.addGuest}
-              />
+              <Button content="Add" color="grey" onClick={this.addGuest} />
               <Checkbox
-                label='RSVP'
-                style={{ paddingTop: '10px' }}
+                label="RSVP"
+                style={{ paddingTop: "10px" }}
                 checked={this.state.rsvp}
                 onChange={this.handleRSVP}
               />
-              {this.state.guests.length === 0 ? ('') : (
-                this.state.guests.map((e, i) => (
-                  <div id='guests' key={i}>
-                    <Card
-                      color='blue'
-                      description={e}
-                      onClick={this.removeGuest}
-                    />
-                  </div>
-                ))
-              )}
+              {this.state.guests.length === 0
+                ? ""
+                : this.state.guests.map((e, i) => (
+                    <div id="guests" key={i}>
+                      <Card
+                        color="blue"
+                        description={e}
+                        onClick={this.removeGuest}
+                      />
+                    </div>
+                  ))}
             </Segment>
           </Grid.Column>
         </Grid.Row>
         <Grid.Row>
           <Grid.Column width={16}>
-            {this.state.error === '' ? ('') : (
+            {this.state.error === "" ? (
+              ""
+            ) : (
               <Message
                 error
                 style={messageStyle}
                 header={`ERROR: ${this.state.error}`}
               />
             )}
-            {this.state.success === '' ? ('') : (
+            {this.state.success === "" ? (
+              ""
+            ) : (
               <Message
                 success
                 style={messageStyle}
