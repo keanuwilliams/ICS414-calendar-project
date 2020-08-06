@@ -12,9 +12,10 @@ import {
   Message,
 } from 'semantic-ui-react';
 import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
+import { download } from '../../api/ics-file/create-ics-file';
 import 'react-google-places-autocomplete/dist/index.min.css';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const events = []; // Events to be added to .ics file
 let userEmail = ''; // The user's email
@@ -37,8 +38,8 @@ class EventInputForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      userEmail: '',
-      userEmailAdded: false,
+      userEmail: 'kananu.williams@gmail.com',
+      userEmailAdded: true,
       userIsOrganizer: false,
       eventName: '',
       startDate: '',
@@ -451,7 +452,7 @@ class EventInputForm extends React.Component {
                   )}
                 </Segment.Group>
               </Grid.Column>
-              <Grid.Column width={16} style={{ paddingTop: '10px' }}>
+              <Grid.Column width={16} style={{ paddingTop: '15px' }}>
                 <Segment>
                   <h3>Added Events</h3>
                   {events.length === 0 ? (
@@ -520,10 +521,10 @@ class EventInputForm extends React.Component {
                                 'N/A'
                               ) : (
                                 e.guests.map((c, n) => (
-                                    <div key={n}>
-                                      { c } <br/>
-                                    </div>
-                                  ))
+                                  <div key={n}>
+                                    { c } <br/>
+                                  </div>
+                                ))
                               )}
                             </Table.Cell>
                             <Table.Cell>
@@ -538,6 +539,18 @@ class EventInputForm extends React.Component {
                           </Table.Row>
                         ))}
                       </Table.Body>
+                      <Table.Footer>
+                        <Table.Row>
+                          <Table.HeaderCell colSpan={8}>
+                            <Button
+                              primary
+                              floated='right'
+                              content='Download File'
+                              onClick={ download }
+                            />
+                          </Table.HeaderCell>
+                        </Table.Row>
+                      </Table.Footer>
                     </Table>
                   )}
                 </Segment>
