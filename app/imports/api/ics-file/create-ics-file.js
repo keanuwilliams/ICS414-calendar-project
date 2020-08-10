@@ -1,5 +1,5 @@
-import saveAs from 'file-saver';
-import EventInputForm from '../../ui/components/EventInputForm';
+import saveAs from "file-saver";
+import EventInputForm from "../../ui/components/EventInputForm";
 
 /** Returns the user's timezone offset (i.e., -1000, -0900, etc.) */
 function getTimezone(dst) {
@@ -25,7 +25,7 @@ function createICSFile(events) {
    * [x] Version
    * [x] Classification (i.e., public, private, confidential)
    * Geographic Position
-   * Location
+   * [x] Location
    * [x] Priority
    * [x] Summary
    * [x] DTSTART
@@ -39,43 +39,39 @@ function createICSFile(events) {
 
   const tzid = new Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-  let file = '';
+  let file = "";
 
   if (events.length !== 0) {
     // Begin creating the .ics file
-    file =
-      'BEGIN:VCALENDAR\n' +
-      'VERSION:2.0\n';
+    file = "BEGIN:VCALENDAR\n" + "VERSION:2.0\n";
 
     // Begin adding the timezone
-    file +=
-      'BEGIN:VTIMEZONE\n' +
-      `TZID:${tzid}\n` +
-      'BEGIN:STANDARD\n';
+    file += "BEGIN:VTIMEZONE\n" + `TZID:${tzid}\n` + "BEGIN:STANDARD\n";
 
     // Check if timezone is one that doesn't observe daylight savings
-    if (tzid === 'Pacific/Honolulu' ||
-      tzid === 'America/Juneau' ||
-      tzid === 'America/Puerto_Rico' ||
-      tzid === 'America/St_Johns') {
-
+    if (
+      tzid === "Pacific/Honolulu" ||
+      tzid === "America/Juneau" ||
+      tzid === "America/Puerto_Rico" ||
+      tzid === "America/St_Johns"
+    ) {
       file += `TZOFFSETFROM:${getTimezone(false)}\n`;
     } else {
       file += `TZOFFSETFROM:${getTimezone(true)}\n`;
     }
 
     file +=
-      'DTSTART:20201101T020000\n' +
+      "DTSTART:20201101T020000\n" +
       `TZOFFSETTO:${getTimezone(false)}\n` +
-      'END:STANDARD\n' +
-      'END:TIMEZONE\n';
+      "END:STANDARD\n" +
+      "END:TIMEZONE\n";
 
     // Add the events
     for (let i = 0; i < events.length; i++) {
       file += events[i];
     }
     // End the .ics file
-    file += 'END:VCALENDAR\n';
+    file += "END:VCALENDAR\n";
   }
   return file;
 }
@@ -84,11 +80,11 @@ function createICSFile(events) {
 export function download() {
   const icsFile = createICSFile(EventInputForm.getEvents());
   let success = false;
-  if (icsFile !== '') {
+  if (icsFile !== "") {
     // The comment below used to suppress Blob being undefined
     // eslint-disable-next-line no-undef
     const blob = new Blob([icsFile]);
-    saveAs(blob, 'events.ics');
+    saveAs(blob, "events.ics");
     success = true;
   }
   return success;

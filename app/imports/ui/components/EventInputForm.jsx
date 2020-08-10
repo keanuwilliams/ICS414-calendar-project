@@ -141,6 +141,8 @@ class EventInputForm extends React.Component {
     eventsToDisplay.push(event);
     console.log(event);
   };
+  // Extracts geolocation from autocompleted-location
+  locationSelect = (location) => {};
 
   /** Code from https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
    *  Used to validate an email address */
@@ -202,6 +204,7 @@ class EventInputForm extends React.Component {
   resetForm = () => {
     this.setState({
       eventName: "",
+      location: "",
       startDate: "",
       endDate: "",
       allDay: false,
@@ -232,7 +235,10 @@ class EventInputForm extends React.Component {
                 <div>
                   <label style={{ fontWeight: "bold" }}>Location</label>
                 </div>
-                <GooglePlacesAutocomplete apiKey="AIzaSyDUy3PQMDR4Q_wx-8ZSH0p45R8_qgQRNx0" />
+                <GooglePlacesAutocomplete
+                  apiKey="AIzaSyDUy3PQMDR4Q_wx-8ZSH0p45R8_qgQRNx0"
+                  onSelect={this.locationSelected}
+                />
                 {this.state.allDay === false ? (
                   <Form.Group>
                     {/* The Start Date Input */}
