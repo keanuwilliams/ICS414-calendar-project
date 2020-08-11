@@ -307,18 +307,17 @@ class EventInputForm extends React.Component {
               </div>
               <Input
                 style={{ width: '35%', marginTop: '10px', fontSize: '18px' }}
+                action={{
+                  style: { fontSize: '18px' },
+                  secondary: true,
+                  content: 'Use Email',
+                  onClick: this.addUserEmail,
+                }}
                 name='userEmail'
                 type='email'
                 placeholder='Your Email'
                 onChange={this.handleChange}
                 value={this.state.userEmail}
-              />
-              <Button
-                secondary
-                style={{ marginTop: '10px', fontSize: '18px' }}
-                content='Use Email'
-                color='grey'
-                onClick={this.addUserEmail}
               />
             </Grid.Row>
           ) : (
