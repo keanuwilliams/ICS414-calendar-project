@@ -58,7 +58,7 @@ function convertEvent(event) {
     const locationArray = event.location.split(',');
     let newLocation = '';
     for (let i = 0; i < locationArray.length - 1; i++) {
-      newLocation += `${locationArray[i]}\\, `;
+      newLocation += `${locationArray[i]}\\,`;
     }
     newLocation += locationArray[locationArray.length - 1];
     eventICS += `LOCATION:${newLocation}\n`;
@@ -98,41 +98,27 @@ function createICSFile(events) {
    * [x] Summary
    * [x] DTSTART
    * [x] DTEND
-   * [?] Time zone identifier
+   * [x] Time zone identifier
    * [x] RSVP
    * [x] Sent-by
    * Resources
    * And aspects of recurring events
    */
 
-  const tzid = new Intl.DateTimeFormat().resolvedOptions().timeZone;
-
   let file = '';
 
   if (events.length !== 0) {
     // Begin creating the .ics file
-    file = 'BEGIN:VCALENDAR\n' + 'VERSION:2.0\n';
+    file = 'BEGIN:VCALENDAR\nVERSION:2.0\n';
 
-    // Begin adding the timezone
-    file += 'BEGIN:VTIMEZONE\n' + `TZID:${tzid}\n` + 'BEGIN:STANDARD\n';
+    // Begin adding the Pacific/Honolulu timezone
+    file += 'BEGIN:VTIMEZONE\nTZID:Pacific/Honolulu\n';
 
-    // Check if timezone is one that doesn't observe daylight savings
-    if (
-      tzid === 'Pacific/Honolulu' ||
-      tzid === 'America/Juneau' ||
-      tzid === 'America/Puerto_Rico' ||
-      tzid === 'America/St_Johns'
-    ) {
-      file += `TZOFFSETFROM:${getTimezone(false)}\n`;
-    } else {
-      file += `TZOFFSETFROM:${getTimezone(true)}\n`;
-    }
+    file += 'BEGIN:DAYLIGHT\nTZOFFSETFROM:-1030\nTZOFFSETTO:-0930\nDTSTART:19330430T020000\nTZNAME:HDT\nEND:DAYLIGHT\n';
 
-    file +=
-      'DTSTART:20201101T020000\n' +
-      `TZOFFSETTO:${getTimezone(false)}\n` +
-      'END:STANDARD\n' +
-      'END:TIMEZONE\n';
+    file += 'BEGIN:STANDARD\nTZOFFSETFROM:-1030\nTZOFFSETTO:-1000\nDTSTART:19470608T020000\nTZNAME:HST\nEND:STANDARD\n';
+
+    file += 'END:VTIMEZONE\n';
 
     // Add the events
     for (let i = 0; i < events.length; i++) {

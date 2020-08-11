@@ -275,6 +275,7 @@ class EventInputForm extends React.Component {
           </Grid.Row>
         ) : (
             <Grid.Row centered>
+              <h2>Disclaimer: All events created will be in the Pacific/Honolulu Timezone</h2>
               <Grid.Column width={8}>
                 <Form onSubmit={this.submit}>
                   <Segment>
