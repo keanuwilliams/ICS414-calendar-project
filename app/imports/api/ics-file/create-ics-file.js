@@ -1,5 +1,6 @@
-import saveAs from 'file-saver';
-import EventInputForm from '../../ui/components/EventInputForm';
+import saveAs from "file-saver";
+import EventInputForm from "../../ui/components/EventInputForm";
+import { geocodeByAddress, getLatLng } from "react-google-places-autocomplete";
 
 /** Returns the user's timezone offset (i.e., -1000, -0900, etc.) */
 function getTimezone(dst) {
@@ -42,6 +43,7 @@ function convertEvent(event) {
   let eventICS; // Event to be added
   const start = convertDate(event.startDate, event.allDay);
   const end = convertDate(event.endDate, event.allDay);
+  let newLocation;
 
   // Begin adding event
   eventICS = `BEGIN:VEVENT\nSUMMARY:${event.eventName}\n`;
@@ -53,10 +55,15 @@ function convertEvent(event) {
     eventICS += `DTSTART:${start}\nDTEND:${end}\n`;
   }
 
+  //Add geoposition
+  if (event.geolocation !== "") {
+    eventICS += `GEO:${event.geolocation}\n`;
+  }
+
   // Add location
-  if (event.location !== '') {
-    const locationArray = event.location.split(',');
-    let newLocation = '';
+  if (event.location !== "") {
+    const locationArray = event.location.split(",");
+    newLocation = "";
     for (let i = 0; i < locationArray.length - 1; i++) {
       newLocation += `${locationArray[i]}\\,`;
     }
@@ -65,7 +72,7 @@ function convertEvent(event) {
   }
 
   // Add organizer
-  if (event.organizer !== '') {
+  if (event.organizer !== "") {
     if (event.organizer !== event.userEmail) {
       eventICS += `ORGANIZER;SENT-BY='${event.userEmail}:'mailto:${event.organizer}\n`;
     } else {
@@ -75,14 +82,16 @@ function convertEvent(event) {
 
   // Add attendees
   for (let i = 0; i < event.guests.length; i++) {
-    eventICS += `ATTENDEE;RSVP=${event.rsvp.toString().toUpperCase()}:mailto:${event.guests[i]}\n`;
+    eventICS += `ATTENDEE;RSVP=${event.rsvp.toString().toUpperCase()}:mailto:${
+      event.guests[i]
+    }\n`;
   }
 
   // Add priority and classification then end
   eventICS +=
     `PRIORITY:${event.priority}\n` +
     `CLASS:${event.classification}\n` +
-    'END:VEVENT\n';
+    "END:VEVENT\n";
 
   return eventICS;
 }
@@ -105,27 +114,29 @@ function createICSFile(events) {
    * And aspects of recurring events
    */
 
-  let file = '';
+  let file = "";
 
   if (events.length !== 0) {
     // Begin creating the .ics file
-    file = 'BEGIN:VCALENDAR\nVERSION:2.0\n';
+    file = "BEGIN:VCALENDAR\nVERSION:2.0\n";
 
     // Begin adding the Pacific/Honolulu timezone
-    file += 'BEGIN:VTIMEZONE\nTZID:Pacific/Honolulu\n';
+    file += "BEGIN:VTIMEZONE\nTZID:Pacific/Honolulu\n";
 
-    file += 'BEGIN:DAYLIGHT\nTZOFFSETFROM:-1030\nTZOFFSETTO:-0930\nDTSTART:19330430T020000\nTZNAME:HDT\nEND:DAYLIGHT\n';
+    file +=
+      "BEGIN:DAYLIGHT\nTZOFFSETFROM:-1030\nTZOFFSETTO:-0930\nDTSTART:19330430T020000\nTZNAME:HDT\nEND:DAYLIGHT\n";
 
-    file += 'BEGIN:STANDARD\nTZOFFSETFROM:-1030\nTZOFFSETTO:-1000\nDTSTART:19470608T020000\nTZNAME:HST\nEND:STANDARD\n';
+    file +=
+      "BEGIN:STANDARD\nTZOFFSETFROM:-1030\nTZOFFSETTO:-1000\nDTSTART:19470608T020000\nTZNAME:HST\nEND:STANDARD\n";
 
-    file += 'END:VTIMEZONE\n';
+    file += "END:VTIMEZONE\n";
 
     // Add the events
     for (let i = 0; i < events.length; i++) {
       file += convertEvent(events[i]);
     }
     // End the .ics file
-    file += 'END:VCALENDAR\n';
+    file += "END:VCALENDAR\n";
   }
   return file;
 }
@@ -135,12 +146,12 @@ export function download() {
   const icsFile = createICSFile(EventInputForm.getEvents());
   const userEmail = EventInputForm.getUserEmail();
   let success = false;
-  if (icsFile !== '') {
-    if (userEmail === '') {
+  if (icsFile !== "") {
+    if (userEmail === "") {
       // The comment below used to suppress Blob being undefined
       // eslint-disable-next-line no-undef
       const blob = new Blob([icsFile]);
-      saveAs(blob, 'events.ics');
+      saveAs(blob, "events.ics");
     } else {
       // The comment below used to suppress Blob being undefined
       // eslint-disable-next-line no-undef
