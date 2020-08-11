@@ -448,7 +448,7 @@ class EventInputForm extends React.Component {
                   </Segment>
                 </Form>
               </Grid.Column>
-              <Grid.Column width={5} id='guests'>
+              <Grid.Column width={4} id='guests'>
                 <Segment.Group>
                   <Segment secondary>
                     <h4>Your Email</h4>
@@ -459,16 +459,16 @@ class EventInputForm extends React.Component {
                     {!this.state.organizerAdded ? (
                       <div>
                         <Input
+                          action={{
+                            content: 'Use',
+                            color: 'grey',
+                            onClick: this.addOrganizer,
+                          }}
                           name='organizer'
                           type='email'
                           placeholder='Organizer&apos;s email'
                           onChange={this.handleChange}
                           value={this.state.organizer}
-                        />
-                        <Button
-                          content='Use'
-                          color='grey'
-                          onClick={this.addOrganizer}
                         />
                       </div>
                     ) : (
@@ -496,16 +496,16 @@ class EventInputForm extends React.Component {
                     <Segment secondary>
                       <h4>Guests</h4>
                       <Input
+                        action={{
+                          content: 'Add',
+                          color: 'grey',
+                          onClick: this.addGuest,
+                        }}
                         name='guest'
                         type='email'
                         placeholder='Add Guest Email'
                         onChange={this.handleChange}
                         value={this.state.guest}
-                      />
-                      <Button
-                        content='Add'
-                        color='grey'
-                        onClick={this.addGuest}
                       />
                       <Checkbox
                         label='RSVP'
@@ -516,7 +516,7 @@ class EventInputForm extends React.Component {
                       {this.state.guests.length === 0
                         ? ''
                         : this.state.guests.map((e, i) => (
-                            <div id='guests' key={i}>
+                            <div style={{ paddingTop: '10px' }} key={i}>
                               <Card
                                 color='blue'
                                 description={e}
@@ -526,32 +526,34 @@ class EventInputForm extends React.Component {
                           ))}
                     </Segment>
                   )}
-                  <Segment secondary>
-                    <h4>Resources</h4>
-                    <Input
-                      name='resource'
-                      placeholder='Add Resource'
-                      onChange={this.handleChange}
-                      value={this.state.resource}
-                    />
-                    <Button
-                      content='Add'
-                      color='grey'
-                      onClick={this.addResource}
-                    />
-                    {this.state.resources.length === 0
-                      ? ''
-                      : this.state.resources.map((e, i) => (
-                        <div id='resources' key={i} style={{ paddingTop: '10px' }}>
-                          <Card
-                            color='black'
-                            description={e}
-                            onClick={this.removeResource}
-                          />
-                        </div>
-                      ))}
-                  </Segment>
                 </Segment.Group>
+              </Grid.Column>
+              <Grid.Column width={4} id='resources'>
+                <Segment secondary>
+                  <h4>Resources</h4>
+                  <Input
+                    action={{
+                      color: 'grey',
+                      content: 'Add',
+                      onClick: this.addResource,
+                    }}
+                    name='resource'
+                    placeholder='Add Resource'
+                    onChange={this.handleChange}
+                    value={this.state.resource}
+                  />
+                  {this.state.resources.length === 0
+                    ? ''
+                    : this.state.resources.map((e, i) => (
+                      <div key={i} style={{ paddingTop: '10px' }}>
+                        <Card
+                          color='black'
+                          description={e}
+                          onClick={this.removeResource}
+                        />
+                      </div>
+                    ))}
+                </Segment>
               </Grid.Column>
               <Grid.Column width={16} style={{ paddingTop: '15px' }}>
                 <Segment>

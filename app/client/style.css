@@ -3,4 +3,11 @@
 }
 #guests {
     padding-top: 10px;
+    margin-left: -15px;
+    padding-right: 5px;
+}
+#resources {
+    padding-top: 10px;
+    margin-left: -5px;
+    padding-right: 5px;
 }

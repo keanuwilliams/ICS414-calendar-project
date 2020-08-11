@@ -8,10 +8,8 @@ class Landing extends React.Component {
     render() {
         return (
             <Grid textAlign='center' container>
-                <Grid.Row verticalAlign='top'>
-                    <Grid.Column textAlign='left' width={16}>
-                        <EventInputForm />
-                    </Grid.Column>
+                <Grid.Row verticalAlign='top' textAlign='left'>
+                  <EventInputForm />
                 </Grid.Row>
             </Grid>
         );
