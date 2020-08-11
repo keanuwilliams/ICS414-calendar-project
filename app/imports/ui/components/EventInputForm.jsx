@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Grid,
   Card,
@@ -10,30 +10,29 @@ import {
   Button,
   Table,
   Message,
-} from "semantic-ui-react";
-import DatePicker from "react-datepicker";
+} from 'semantic-ui-react';
+import DatePicker from 'react-datepicker';
 import GooglePlacesAutocomplete, {
   geocodeByAddress,
   getLatLng,
-} from "react-google-places-autocomplete";
-import { download } from "../../api/ics-file/create-ics-file";
-import "react-google-places-autocomplete/dist/index.min.css";
-import "react-datepicker/dist/react-datepicker.css";
+} from 'react-google-places-autocomplete';
+import { download } from '../../api/ics-file/create-ics-file';
+import 'react-google-places-autocomplete/dist/index.min.css';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const events = []; // Events to be added to .ics file
-let userEmail = ""; // The user's email
-let geoPos = "";
+let userEmail = ''; // The user's email
 const priorityOptions = [
   // The options for priority field in form
-  { key: "n", text: "None", value: 0 },
-  { key: "l", text: "Low", value: 6 },
-  { key: "m", text: "Medium", value: 5 },
-  { key: "h", text: "High", value: 1 },
+  { key: 'n', text: 'None', value: 0 },
+  { key: 'l', text: 'Low', value: 6 },
+  { key: 'm', text: 'Medium', value: 5 },
+  { key: 'h', text: 'High', value: 1 },
 ];
 const classOptions = [
-  { key: "pub", text: "Public", value: "PUBLIC" },
-  { key: "pri", text: "Private", value: "PRIVATE" },
-  { key: "con", text: "Confidential", value: "CONFIDENTIAL" },
+  { key: 'pub', text: 'Public', value: 'PUBLIC' },
+  { key: 'pri', text: 'Private', value: 'PRIVATE' },
+  { key: 'con', text: 'Confidential', value: 'CONFIDENTIAL' },
 ];
 
 class EventInputForm extends React.Component {
@@ -41,24 +40,26 @@ class EventInputForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      userEmail: "",
+      userEmail: '',
       userEmailAdded: false,
       userIsOrganizer: false,
-      eventName: "",
-      geolocation: "",
-      location: "",
-      startDate: "",
-      endDate: "",
+      eventName: '',
+      geolocation: '',
+      location: '',
+      startDate: '',
+      endDate: '',
       allDay: false,
       priority: 0,
-      classification: "PUBLIC",
-      organizer: "",
+      classification: 'PUBLIC',
+      organizer: '',
       organizerAdded: false,
-      guest: "",
+      guest: '',
       rsvp: false,
       guests: [],
-      success: "",
-      error: "",
+      resource: '',
+      resources: [],
+      success: '',
+      error: '',
     };
   }
 
@@ -84,8 +85,7 @@ class EventInputForm extends React.Component {
     this.setState({ endDate: date });
   };
 
-  handleAllDay = () =>
-    this.setState((prevState) => ({ allDay: !prevState.allDay }));
+  handleAllDay = () => this.setState((prevState) => ({ allDay: !prevState.allDay }));
 
   handleRSVP = () => this.setState((prevState) => ({ rsvp: !prevState.rsvp }));
 
@@ -99,7 +99,7 @@ class EventInputForm extends React.Component {
     } else {
       this.setState({
         userIsOrganizer: false,
-        organizer: "",
+        organizer: '',
         organizerAdded: false,
       });
     }
@@ -124,6 +124,7 @@ class EventInputForm extends React.Component {
       organizer: this.state.organizer,
       guests: this.state.guests,
       rsvp: this.state.rsvp,
+      resources: this.state.resources,
     };
 
     events.push(event);
@@ -135,7 +136,7 @@ class EventInputForm extends React.Component {
     this.setState({ location: location.description });
     geocodeByAddress(location.description)
       .then((results) => getLatLng(results[0]))
-      .then(({ lat, lng }) => this.setState({ geolocation: lat + ";" + lng }));
+      .then(({ lat, lng }) => this.setState({ geolocation: `${lat};${lng}` }));
   };
 
   /** Code from https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
@@ -147,19 +148,19 @@ class EventInputForm extends React.Component {
 
   /** Add organizer to event */
   addOrganizer = () => {
-    if (this.state.organizer === "") {
-      this.setState({ error: "organizer email is empty." });
+    if (this.state.organizer === '') {
+      this.setState({ error: 'organizer email is empty.' });
     } else if (!this.validateEmail(this.state.organizer)) {
-      this.setState({ error: "organizer email is invalid." });
+      this.setState({ error: 'organizer email is invalid.' });
     } else {
-      this.setState({ error: "", organizerAdded: true });
+      this.setState({ error: '', organizerAdded: true });
       this.forceUpdate();
     }
   };
 
   removeOrganizer = () => {
     this.setState({
-      organizer: "",
+      organizer: '',
       organizerAdded: false,
       userIsOrganizer: false,
     });
@@ -167,25 +168,25 @@ class EventInputForm extends React.Component {
 
   /** Add user to event */
   addUserEmail = () => {
-    if (this.state.userEmail === "") {
-      this.setState({ error: "user email is empty." });
+    if (this.state.userEmail === '') {
+      this.setState({ error: 'user email is empty.' });
     } else if (!this.validateEmail(this.state.userEmail)) {
-      this.setState({ error: "user email is invalid." });
+      this.setState({ error: 'user email is invalid.' });
     } else {
-      this.setState({ error: "", userEmailAdded: true });
+      this.setState({ error: '', userEmailAdded: true });
       this.forceUpdate();
     }
   };
 
   /** Add guest to guest array */
   addGuest = () => {
-    if (this.state.guest === "") {
-      this.setState({ error: "guest email is empty." });
+    if (this.state.guest === '') {
+      this.setState({ error: 'guest email is empty.' });
     } else if (!this.validateEmail(this.state.guest)) {
-      this.setState({ error: "guest email is invalid." });
+      this.setState({ error: 'guest email is invalid.' });
     } else {
       this.state.guests.push(this.state.guest);
-      this.setState({ error: "", guest: "" });
+      this.setState({ error: '', guest: '' });
       this.forceUpdate();
     }
   };
@@ -193,6 +194,23 @@ class EventInputForm extends React.Component {
   /** Remove guest from guest array */
   removeGuest = (c, v) => {
     this.state.guests.splice(this.state.guests.indexOf(v.description), 1);
+    this.forceUpdate();
+  };
+
+  /** Add resource to resource array */
+  addResource = () => {
+    if (this.state.resource === '') {
+      this.setState({ error: 'resource field is empty.' });
+    } else {
+      this.state.resources.push(this.state.resource);
+      this.setState({ error: '', resource: '' });
+      this.forceUpdate();
+    }
+  };
+
+  /** Remove resource from resource array */
+  removeResource = (c, v) => {
+    this.state.resources.splice(this.state.guests.indexOf(v.description), 1);
     this.forceUpdate();
   };
 
@@ -204,19 +222,19 @@ class EventInputForm extends React.Component {
       this.state.allDay === false
     ) {
       // Display error message
-      this.setState({ error: "the start date begins after the end date." });
-      this.setState({ success: "" });
-    } else if (this.state.startDate === "" || this.state.endDate === "") {
+      this.setState({ error: 'the start date begins after the end date.' });
+      this.setState({ success: '' });
+    } else if (this.state.startDate === '' || this.state.endDate === '') {
       // If dates are empty
       // Display error message
-      this.setState({ error: "please enter a start and end date." });
-      this.setState({ success: "" });
+      this.setState({ error: 'please enter a start and end date.' });
+      this.setState({ success: '' });
     } else {
       // Else add the event
       // Add event to events array for both the display and the .ics file
       this.addEvent();
       // Remove error message if there was one
-      this.setState({ error: "" });
+      this.setState({ error: '' });
       // Add success message
       this.setState({
         success: `'${this.state.eventName}' successfully added.`,
@@ -230,31 +248,33 @@ class EventInputForm extends React.Component {
   resetForm = () => {
     this.setState({
       userIsOrganizer: false,
-      eventName: "",
-      geolocation: "",
-      location: "",
-      startDate: "",
-      endDate: "",
+      eventName: '',
+      geolocation: '',
+      location: '',
+      startDate: '',
+      endDate: '',
       allDay: false,
       priority: 0,
-      classification: "PUBLIC",
-      organizer: "",
+      classification: 'PUBLIC',
+      organizer: '',
       organizerAdded: false,
-      guest: "",
+      guest: '',
       rsvp: false,
       guests: [],
+      resource: '',
+      resources: [],
     });
   };
 
   render() {
-    const messageStyle = { marginBottom: "30px" };
+    const messageStyle = { marginBottom: '30px' };
     return (
-      <div className="eventInputForm">
+      <div className='eventInputForm'>
         <Grid>
           <Grid.Row>
             <Grid.Column width={16}>
-              {this.state.error === "" ? (
-                ""
+              {this.state.error === '' ? (
+                ''
               ) : (
                 <Message
                   error
@@ -262,8 +282,8 @@ class EventInputForm extends React.Component {
                   header={`ERROR: ${this.state.error}`}
                 />
               )}
-              {this.state.success === "" ? (
-                ""
+              {this.state.success === '' ? (
+                ''
               ) : (
                 <Message
                   success
@@ -280,24 +300,24 @@ class EventInputForm extends React.Component {
                   Before you are able to create an event, please enter your
                   email address.
                 </h2>
-                <h3 style={{ color: "red", marginTop: "-5px" }}>
+                <h3 style={{ color: 'red', marginTop: '-5px' }}>
                   You will not be able to change it, unless you refresh the
                   page.
                 </h3>
               </div>
               <Input
-                style={{ width: "35%", marginTop: "10px", fontSize: "18px" }}
-                name="userEmail"
-                type="email"
-                placeholder="Your Email"
+                style={{ width: '35%', marginTop: '10px', fontSize: '18px' }}
+                name='userEmail'
+                type='email'
+                placeholder='Your Email'
                 onChange={this.handleChange}
                 value={this.state.userEmail}
               />
               <Button
                 secondary
-                style={{ marginTop: "10px", fontSize: "18px" }}
-                content="Use Email"
-                color="grey"
+                style={{ marginTop: '10px', fontSize: '18px' }}
+                content='Use Email'
+                color='grey'
                 onClick={this.addUserEmail}
               />
             </Grid.Row>
@@ -313,27 +333,27 @@ class EventInputForm extends React.Component {
                     <h3>Create Event</h3>
                     <Form.Input
                       required
-                      name="eventName"
-                      placeholder="Event Name"
+                      name='eventName'
+                      placeholder='Event Name'
                       value={this.state.eventName}
                       onChange={this.handleChange}
                     />
-                    <Form.Input label="Location">
+                    <Form.Input label='Location'>
                       <GooglePlacesAutocomplete
-                        apiKey="AIzaSyDUy3PQMDR4Q_wx-8ZSH0p45R8_qgQRNx0"
+                        apiKey='AIzaSyDUy3PQMDR4Q_wx-8ZSH0p45R8_qgQRNx0'
                         onSelect={this.locationSelect}
-                        placeholder="Address"
+                        placeholder='Address'
                       />
                     </Form.Input>
                     {this.state.allDay === false ? (
                       <Form.Group>
                         {/* The Start Date Input */}
-                        <Form.Input required label="Start Date">
+                        <Form.Input required label='Start Date'>
                           <DatePicker
                             isClearable
-                            name="startDate"
-                            placeholderText="Start Date"
-                            todayButton="Today"
+                            name='startDate'
+                            placeholderText='Start Date'
+                            todayButton='Today'
                             selected={this.state.startDate}
                             onChange={this.startDateChange}
                             selectsStart
@@ -342,16 +362,16 @@ class EventInputForm extends React.Component {
                             maxDate={this.state.endDate}
                             showTimeSelect
                             timeIntervals={15}
-                            dateFormat="MM/dd/yyyy hh:mm aa"
+                            dateFormat='MM/dd/yyyy hh:mm aa'
                           />
                         </Form.Input>
                         {/* The End Date Input */}
-                        <Form.Input required label="End Date">
+                        <Form.Input required label='End Date'>
                           <DatePicker
                             isClearable
-                            name="endDate"
-                            placeholderText="End Date"
-                            todayButton="Today"
+                            name='endDate'
+                            placeholderText='End Date'
+                            todayButton='Today'
                             selected={this.state.endDate}
                             onChange={this.endDateChange}
                             selectsEnd
@@ -360,75 +380,75 @@ class EventInputForm extends React.Component {
                             minDate={this.state.startDate}
                             showTimeSelect
                             timeIntervals={15}
-                            dateFormat="MM/dd/yyyy hh:mm aa"
+                            dateFormat='MM/dd/yyyy hh:mm aa'
                           />
                         </Form.Input>
                       </Form.Group>
                     ) : (
                       <Form.Group>
                         {/* The Start Date Input */}
-                        <Form.Input fluid required label="Start Date">
+                        <Form.Input fluid required label='Start Date'>
                           <DatePicker
                             isClearable
-                            name="startDate"
-                            placeholderText="Start Date"
-                            todayButton="Today"
+                            name='startDate'
+                            placeholderText='Start Date'
+                            todayButton='Today'
                             selected={this.state.startDate}
                             onChange={this.startDateChange}
                             selectsStart
                             startDate={this.state.startDate}
                             endDate={this.state.endDate}
                             maxDate={this.state.endDate}
-                            dateFormat="MM/dd/yyyy"
+                            dateFormat='MM/dd/yyyy'
                           />
                         </Form.Input>
                         {/* The End Date Input */}
-                        <Form.Input fluid required label="End Date">
+                        <Form.Input fluid required label='End Date'>
                           <DatePicker
                             isClearable
-                            name="endDate"
-                            placeholderText="End Date"
-                            todayButton="Today"
+                            name='endDate'
+                            placeholderText='End Date'
+                            todayButton='Today'
                             selected={this.state.endDate}
                             onChange={this.endDateChange}
                             selectsEnd
                             startDate={this.state.startDate}
                             endDate={this.state.endDate}
                             minDate={this.state.startDate}
-                            dateFormat="MM/dd/yyyy"
+                            dateFormat='MM/dd/yyyy'
                           />
                         </Form.Input>
                       </Form.Group>
                     )}
                     <Form.Field
                       control={Checkbox}
-                      label="All Day"
+                      label='All Day'
                       onChange={this.handleAllDay}
                       checked={this.state.allDay}
                     />
                     <Form.Group>
                       <Form.Field
                         control={Select}
-                        name="priority"
-                        label="Priority"
+                        name='priority'
+                        label='Priority'
                         options={priorityOptions}
                         onChange={this.handleChange}
                         value={this.state.priority}
                       />
                       <Form.Field
                         control={Select}
-                        name="classification"
-                        label="Classification"
+                        name='classification'
+                        label='Classification'
                         options={classOptions}
                         onChange={this.handleChange}
                         value={this.state.classification}
                       />
                     </Form.Group>
-                    <Form.Button secondary content="Add Event" />
+                    <Form.Button secondary content='Add Event' />
                   </Segment>
                 </Form>
               </Grid.Column>
-              <Grid.Column width={5} id="guests">
+              <Grid.Column width={5} id='guests'>
                 <Segment.Group>
                   <Segment secondary>
                     <h4>Your Email</h4>
@@ -439,15 +459,15 @@ class EventInputForm extends React.Component {
                     {!this.state.organizerAdded ? (
                       <div>
                         <Input
-                          name="organizer"
-                          type="email"
-                          placeholder="Organizer's email"
+                          name='organizer'
+                          type='email'
+                          placeholder='Organizer&apos;s email'
                           onChange={this.handleChange}
                           value={this.state.organizer}
                         />
                         <Button
-                          content="Use"
-                          color="grey"
+                          content='Use'
+                          color='grey'
                           onClick={this.addOrganizer}
                         />
                       </div>
@@ -455,7 +475,7 @@ class EventInputForm extends React.Component {
                       <div>
                         {this.state.organizer} (
                         <a
-                          style={{ color: "red" }}
+                          style={{ color: 'red' }}
                           onClick={this.removeOrganizer}
                         >
                           x
@@ -464,41 +484,41 @@ class EventInputForm extends React.Component {
                       </div>
                     )}
                     <Checkbox
-                      label="I am the organizer"
-                      style={{ paddingTop: "10px" }}
+                      label='I am the organizer'
+                      style={{ paddingTop: '10px' }}
                       checked={this.state.userIsOrganizer}
                       onChange={this.handleUserIsOrganizer}
                     />
                   </Segment>
                   {!this.state.organizerAdded ? (
-                    ""
+                    ''
                   ) : (
                     <Segment secondary>
                       <h4>Guests</h4>
                       <Input
-                        name="guest"
-                        type="email"
-                        placeholder="Add Guest Email"
+                        name='guest'
+                        type='email'
+                        placeholder='Add Guest Email'
                         onChange={this.handleChange}
                         value={this.state.guest}
                       />
                       <Button
-                        content="Add"
-                        color="grey"
+                        content='Add'
+                        color='grey'
                         onClick={this.addGuest}
                       />
                       <Checkbox
-                        label="RSVP"
-                        style={{ paddingTop: "10px" }}
+                        label='RSVP'
+                        style={{ paddingTop: '10px' }}
                         checked={this.state.rsvp}
                         onChange={this.handleRSVP}
                       />
                       {this.state.guests.length === 0
-                        ? ""
+                        ? ''
                         : this.state.guests.map((e, i) => (
-                            <div id="guests" key={i}>
+                            <div id='guests' key={i}>
                               <Card
-                                color="blue"
+                                color='blue'
                                 description={e}
                                 onClick={this.removeGuest}
                               />
@@ -506,13 +526,38 @@ class EventInputForm extends React.Component {
                           ))}
                     </Segment>
                   )}
+                  <Segment secondary>
+                    <h4>Resources</h4>
+                    <Input
+                      name='resource'
+                      placeholder='Add Resource'
+                      onChange={this.handleChange}
+                      value={this.state.resource}
+                    />
+                    <Button
+                      content='Add'
+                      color='grey'
+                      onClick={this.addResource}
+                    />
+                    {this.state.resources.length === 0
+                      ? ''
+                      : this.state.resources.map((e, i) => (
+                        <div id='resources' key={i} style={{ paddingTop: '10px' }}>
+                          <Card
+                            color='black'
+                            description={e}
+                            onClick={this.removeResource}
+                          />
+                        </div>
+                      ))}
+                  </Segment>
                 </Segment.Group>
               </Grid.Column>
-              <Grid.Column width={16} style={{ paddingTop: "15px" }}>
+              <Grid.Column width={16} style={{ paddingTop: '15px' }}>
                 <Segment>
                   <h3>Added Events</h3>
                   {events.length === 0 ? (
-                    <h4 style={{ color: "grey", marginTop: "5px" }}>
+                    <h4 style={{ color: 'grey', marginTop: '5px' }}>
                       There are currently no events added.
                     </h4>
                   ) : (
@@ -526,6 +571,7 @@ class EventInputForm extends React.Component {
                           <Table.HeaderCell>Organizer</Table.HeaderCell>
                           <Table.HeaderCell>Guests</Table.HeaderCell>
                           <Table.HeaderCell>RSVP</Table.HeaderCell>
+                          <Table.HeaderCell>Resources</Table.HeaderCell>
                           <Table.HeaderCell>Priority</Table.HeaderCell>
                           <Table.HeaderCell>Class</Table.HeaderCell>
                         </Table.Row>
@@ -540,7 +586,7 @@ class EventInputForm extends React.Component {
                                 ? e.startDate.substr(0, 10)
                                 : `${e.startDate.substr(
                                     0,
-                                    10
+                                    10,
                                   )}\n${e.startDate.substr(11, 5)} (UTC)`}
                             </Table.Cell>
                             <Table.Cell>
@@ -548,15 +594,15 @@ class EventInputForm extends React.Component {
                                 ? e.endDate.substr(0, 10)
                                 : `${e.endDate.substr(
                                     0,
-                                    10
+                                    10,
                                   )}\n${e.endDate.substr(11, 5)} (UTC)`}
                             </Table.Cell>
                             <Table.Cell>
-                              {e.organizer === "" ? "N/A" : e.organizer}
+                              {e.organizer === '' ? 'N/A' : e.organizer}
                             </Table.Cell>
                             <Table.Cell>
                               {e.guests.length === 0
-                                ? "N/A"
+                                ? 'N/A'
                                 : e.guests.map((c, n) => (
                                     <div key={n}>
                                       {c} <br />
@@ -566,6 +612,15 @@ class EventInputForm extends React.Component {
                             <Table.Cell>
                               <Checkbox checked={e.rsvp} />
                             </Table.Cell>
+                            <Table.Cell>
+                              {e.resources.length === 0
+                                ? 'N/A'
+                                : e.resources.map((c, n) => (
+                                  <div key={n}>
+                                    {c} <br />
+                                  </div>
+                                ))}
+                            </Table.Cell>
                             <Table.Cell>{e.priority}</Table.Cell>
                             <Table.Cell>{e.classification}</Table.Cell>
                           </Table.Row>
@@ -573,11 +628,11 @@ class EventInputForm extends React.Component {
                       </Table.Body>
                       <Table.Footer>
                         <Table.Row>
-                          <Table.HeaderCell colSpan={9}>
+                          <Table.HeaderCell colSpan={10}>
                             <Button
                               primary
-                              floated="right"
-                              content="Download File"
+                              floated='right'
+                              content='Download File'
                               onClick={download}
                             />
                           </Table.HeaderCell>

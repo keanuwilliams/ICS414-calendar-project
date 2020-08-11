@@ -1,24 +1,6 @@
-import saveAs from "file-saver";
-import EventInputForm from "../../ui/components/EventInputForm";
-import { geocodeByAddress, getLatLng } from "react-google-places-autocomplete";
-
-/** Returns the user's timezone offset (i.e., -1000, -0900, etc.) */
-function getTimezone(dst) {
-  let offset = -(new Date().getTimezoneOffset() / 60) * 100;
-  if (dst) {
-    offset += 100;
-    offset.toString();
-    if (offset.length < 4) {
-      offset = `-0${offset.substr(1, 3)}`;
-    }
-  } else {
-    offset.toString();
-    if (offset.length < 4) {
-      offset = `-0${offset.substr(1, 3)}`;
-    }
-  }
-  return offset;
-}
+import saveAs from 'file-saver';
+import EventInputForm from '../../ui/components/EventInputForm';
+// import { geocodeByAddress, getLatLng } from 'react-google-places-autocomplete';
 
 /** Convert user-input date to date to be used in .ics file */
 function convertDate(date, allDay) {
@@ -55,15 +37,15 @@ function convertEvent(event) {
     eventICS += `DTSTART:${start}\nDTEND:${end}\n`;
   }
 
-  //Add geoposition
-  if (event.geolocation !== "") {
+  // Add geoposition
+  if (event.geolocation !== '') {
     eventICS += `GEO:${event.geolocation}\n`;
   }
 
   // Add location
-  if (event.location !== "") {
-    const locationArray = event.location.split(",");
-    newLocation = "";
+  if (event.location !== '') {
+    const locationArray = event.location.split(',');
+    newLocation = '';
     for (let i = 0; i < locationArray.length - 1; i++) {
       newLocation += `${locationArray[i]}\\,`;
     }
@@ -72,9 +54,9 @@ function convertEvent(event) {
   }
 
   // Add organizer
-  if (event.organizer !== "") {
+  if (event.organizer !== '') {
     if (event.organizer !== event.userEmail) {
-      eventICS += `ORGANIZER;SENT-BY='${event.userEmail}:'mailto:${event.organizer}\n`;
+      eventICS += `ORGANIZER;SENT-BY="${event.userEmail}":mailto:${event.organizer}\n`;
     } else {
       eventICS += `ORGANIZER:MAILTO:${event.userEmail}\n`;
     }
@@ -87,11 +69,20 @@ function convertEvent(event) {
     }\n`;
   }
 
+  // Add resources
+  if (event.resources.length > 0) {
+    eventICS += `RESOURCES:${event.resources[0].toUpperCase()}`;
+    for (let i = 1; i < event.resources.length; i++) {
+      eventICS += `,${event.resources[i].toUpperCase()}`;
+    }
+    eventICS += '\n';
+  }
+
   // Add priority and classification then end
   eventICS +=
     `PRIORITY:${event.priority}\n` +
     `CLASS:${event.classification}\n` +
-    "END:VEVENT\n";
+    'END:VEVENT\n';
 
   return eventICS;
 }
@@ -101,7 +92,7 @@ function createICSFile(events) {
   /** Implement required functionality
    * [x] Version
    * [x] Classification (i.e., public, private, confidential)
-   * Geographic Position
+   * [x] Geographic Position
    * [x] Location
    * [x] Priority
    * [x] Summary
@@ -110,33 +101,33 @@ function createICSFile(events) {
    * [x] Time zone identifier
    * [x] RSVP
    * [x] Sent-by
-   * Resources
+   * [x] Resources
    * And aspects of recurring events
    */
 
-  let file = "";
+  let file = '';
 
   if (events.length !== 0) {
     // Begin creating the .ics file
-    file = "BEGIN:VCALENDAR\nVERSION:2.0\n";
+    file = 'BEGIN:VCALENDAR\nVERSION:2.0\n';
 
     // Begin adding the Pacific/Honolulu timezone
-    file += "BEGIN:VTIMEZONE\nTZID:Pacific/Honolulu\n";
+    file += 'BEGIN:VTIMEZONE\nTZID:Pacific/Honolulu\n';
 
     file +=
-      "BEGIN:DAYLIGHT\nTZOFFSETFROM:-1030\nTZOFFSETTO:-0930\nDTSTART:19330430T020000\nTZNAME:HDT\nEND:DAYLIGHT\n";
+      'BEGIN:DAYLIGHT\nTZOFFSETFROM:-1030\nTZOFFSETTO:-0930\nDTSTART:19330430T020000\nTZNAME:HDT\nEND:DAYLIGHT\n';
 
     file +=
-      "BEGIN:STANDARD\nTZOFFSETFROM:-1030\nTZOFFSETTO:-1000\nDTSTART:19470608T020000\nTZNAME:HST\nEND:STANDARD\n";
+      'BEGIN:STANDARD\nTZOFFSETFROM:-1030\nTZOFFSETTO:-1000\nDTSTART:19470608T020000\nTZNAME:HST\nEND:STANDARD\n';
 
-    file += "END:VTIMEZONE\n";
+    file += 'END:VTIMEZONE\n';
 
     // Add the events
     for (let i = 0; i < events.length; i++) {
       file += convertEvent(events[i]);
     }
     // End the .ics file
-    file += "END:VCALENDAR\n";
+    file += 'END:VCALENDAR\n';
   }
   return file;
 }
@@ -146,12 +137,12 @@ export function download() {
   const icsFile = createICSFile(EventInputForm.getEvents());
   const userEmail = EventInputForm.getUserEmail();
   let success = false;
-  if (icsFile !== "") {
-    if (userEmail === "") {
+  if (icsFile !== '') {
+    if (userEmail === '') {
       // The comment below used to suppress Blob being undefined
       // eslint-disable-next-line no-undef
       const blob = new Blob([icsFile]);
-      saveAs(blob, "events.ics");
+      saveAs(blob, 'events.ics');
     } else {
       // The comment below used to suppress Blob being undefined
       // eslint-disable-next-line no-undef
