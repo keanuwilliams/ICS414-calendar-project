@@ -583,7 +583,7 @@ class EventInputForm extends React.Component {
                         {events.map((e, i) => (
                           <Table.Row key={i}>
                             <Table.Cell>{e.eventName}</Table.Cell>
-                            <Table.Cell>{e.location}</Table.Cell>
+                            <Table.Cell>{e.location === '' ? 'N/A' : e.location}</Table.Cell>
                             <Table.Cell>
                               {e.allDay
                                 ? e.startDate.substr(0, 10)
