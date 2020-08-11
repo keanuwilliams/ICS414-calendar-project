@@ -37,10 +37,11 @@ class EventInputForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      userEmail: '',
-      userEmailAdded: false,
+      userEmail: 'kananu.williams@gmail.com',
+      userEmailAdded: true,
       userIsOrganizer: false,
       eventName: '',
+      geolocation: '',
       location: '',
       startDate: '',
       endDate: '',
@@ -79,8 +80,7 @@ class EventInputForm extends React.Component {
     this.setState({ endDate: date });
   };
 
-  handleAllDay = () =>
-    this.setState((prevState) => ({ allDay: !prevState.allDay }));
+  handleAllDay = () => this.setState((prevState) => ({ allDay: !prevState.allDay }));
 
   handleRSVP = () => this.setState((prevState) => ({ rsvp: !prevState.rsvp }));
 
@@ -101,6 +101,8 @@ class EventInputForm extends React.Component {
     const event = {
       userEmail: this.state.userEmail,
       eventName: this.state.eventName,
+      geolocation: this.state.geolocation,
+      location: this.state.location,
       startDate: start,
       endDate: end,
       allDay: this.state.allDay,
@@ -114,9 +116,11 @@ class EventInputForm extends React.Component {
     events.push(event);
     this.forceUpdate();
   };
-  
+
   // Extracts geolocation from autocompleted-location
-  locationSelect = (location) => {};
+  locationSelect = (location) => {
+    this.setState({ location: location.description });
+  };
 
   /** Code from https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
    *  Used to validate an email address */
@@ -207,6 +211,7 @@ class EventInputForm extends React.Component {
     this.setState({
       userIsOrganizer: false,
       eventName: '',
+      geolocation: '',
       location: '',
       startDate: '',
       endDate: '',
@@ -281,13 +286,13 @@ class EventInputForm extends React.Component {
                       value={this.state.eventName}
                       onChange={this.handleChange}
                     />
-                    <div>
-                      <label style={{ fontWeight: 'bold' }}>Location</label>
-                    </div>
-                    <GooglePlacesAutocomplete
-                      apiKey='AIzaSyDUy3PQMDR4Q_wx-8ZSH0p45R8_qgQRNx0'
-                      onSelect={this.locationSelected}
-                    />
+                    <Form.Input label='Location'>
+                      <GooglePlacesAutocomplete
+                        apiKey='AIzaSyDUy3PQMDR4Q_wx-8ZSH0p45R8_qgQRNx0'
+                        onSelect={this.locationSelect}
+                        placeholder='Address'
+                      />
+                    </Form.Input>
                     {this.state.allDay === false ? (
                       <Form.Group>
                         {/* The Start Date Input */}
@@ -479,6 +484,9 @@ class EventInputForm extends React.Component {
                             Name
                           </Table.HeaderCell>
                           <Table.HeaderCell>
+                            Location
+                          </Table.HeaderCell>
+                          <Table.HeaderCell>
                             Start Date
                           </Table.HeaderCell>
                           <Table.HeaderCell>
@@ -506,6 +514,9 @@ class EventInputForm extends React.Component {
                           <Table.Row key={i}>
                             <Table.Cell>
                               {e.eventName}
+                            </Table.Cell>
+                            <Table.Cell>
+                              {e.location}
                             </Table.Cell>
                             <Table.Cell>
                               {(e.allDay) ? (
@@ -553,7 +564,7 @@ class EventInputForm extends React.Component {
                       </Table.Body>
                       <Table.Footer>
                         <Table.Row>
-                          <Table.HeaderCell colSpan={8}>
+                          <Table.HeaderCell colSpan={9}>
                             <Button
                               primary
                               floated='right'

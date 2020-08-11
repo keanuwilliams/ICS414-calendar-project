@@ -53,6 +53,17 @@ function convertEvent(event) {
     eventICS += `DTSTART:${start}\nDTEND:${end}\n`;
   }
 
+  // Add location
+  if (event.location !== '') {
+    const locationArray = event.location.split(',');
+    let newLocation = '';
+    for (let i = 0; i < locationArray.length - 1; i++) {
+      newLocation += `${locationArray[i]}\\, `;
+    }
+    newLocation += locationArray[locationArray.length - 1];
+    eventICS += `LOCATION: ${newLocation}\n`;
+  }
+
   // Add organizer
   if (event.organizer !== '') {
     if (event.organizer !== event.userEmail) {
