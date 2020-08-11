@@ -33,7 +33,6 @@ const classOptions = [
 ];
 
 class EventInputForm extends React.Component {
-
   /** Initialize state fields. */
   constructor(props) {
     super(props);
@@ -42,6 +41,7 @@ class EventInputForm extends React.Component {
       userEmailAdded: false,
       userIsOrganizer: false,
       eventName: '',
+      location: '',
       startDate: '',
       endDate: '',
       allDay: false,
@@ -79,7 +79,8 @@ class EventInputForm extends React.Component {
     this.setState({ endDate: date });
   };
 
-  handleAllDay = () => this.setState((prevState) => ({ allDay: !prevState.allDay }));
+  handleAllDay = () =>
+    this.setState((prevState) => ({ allDay: !prevState.allDay }));
 
   handleRSVP = () => this.setState((prevState) => ({ rsvp: !prevState.rsvp }));
 
@@ -113,6 +114,9 @@ class EventInputForm extends React.Component {
     events.push(event);
     this.forceUpdate();
   };
+  
+  // Extracts geolocation from autocompleted-location
+  locationSelect = (location) => {};
 
   /** Code from https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
    *  Used to validate an email address */
@@ -160,13 +164,13 @@ class EventInputForm extends React.Component {
       this.setState({ error: '', guest: '' });
       this.forceUpdate();
     }
-  }
+  };
 
   /** Remove guest from guest array */
   removeGuest = (c, v) => {
     this.state.guests.splice(this.state.guests.indexOf(v.description), 1);
     this.forceUpdate();
-  }
+  };
 
   /** Handles the errors then submits the form. */
   submit = () => {
@@ -203,6 +207,7 @@ class EventInputForm extends React.Component {
     this.setState({
       userIsOrganizer: false,
       eventName: '',
+      location: '',
       startDate: '',
       endDate: '',
       allDay: false,
@@ -275,6 +280,13 @@ class EventInputForm extends React.Component {
                       placeholder='Event Name'
                       value={this.state.eventName}
                       onChange={this.handleChange}
+                    />
+                    <div>
+                      <label style={{ fontWeight: 'bold' }}>Location</label>
+                    </div>
+                    <GooglePlacesAutocomplete
+                      apiKey='AIzaSyDUy3PQMDR4Q_wx-8ZSH0p45R8_qgQRNx0'
+                      onSelect={this.locationSelected}
                     />
                     {this.state.allDay === false ? (
                       <Form.Group>

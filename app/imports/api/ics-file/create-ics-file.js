@@ -56,7 +56,7 @@ function convertEvent(event) {
   // Add organizer
   if (event.organizer !== '') {
     if (event.organizer !== event.userEmail) {
-      eventICS += `ORGANIZER;SENT-BY="${event.userEmail}:"mailto:${event.organizer}\n`;
+      eventICS += `ORGANIZER;SENT-BY='${event.userEmail}:'mailto:${event.organizer}\n`;
     } else {
       eventICS += `ORGANIZER:MAILTO:${event.userEmail}\n`;
     }
@@ -82,7 +82,7 @@ function createICSFile(events) {
    * [x] Version
    * [x] Classification (i.e., public, private, confidential)
    * Geographic Position
-   * Location
+   * [x] Location
    * [x] Priority
    * [x] Summary
    * [x] DTSTART
@@ -100,22 +100,18 @@ function createICSFile(events) {
 
   if (events.length !== 0) {
     // Begin creating the .ics file
-    file =
-      'BEGIN:VCALENDAR\n' +
-      'VERSION:2.0\n';
+    file = 'BEGIN:VCALENDAR\n' + 'VERSION:2.0\n';
 
     // Begin adding the timezone
-    file +=
-      'BEGIN:VTIMEZONE\n' +
-      `TZID:${tzid}\n` +
-      'BEGIN:STANDARD\n';
+    file += 'BEGIN:VTIMEZONE\n' + `TZID:${tzid}\n` + 'BEGIN:STANDARD\n';
 
     // Check if timezone is one that doesn't observe daylight savings
-    if (tzid === 'Pacific/Honolulu' ||
+    if (
+      tzid === 'Pacific/Honolulu' ||
       tzid === 'America/Juneau' ||
       tzid === 'America/Puerto_Rico' ||
-      tzid === 'America/St_Johns') {
-
+      tzid === 'America/St_Johns'
+    ) {
       file += `TZOFFSETFROM:${getTimezone(false)}\n`;
     } else {
       file += `TZOFFSETFROM:${getTimezone(true)}\n`;
