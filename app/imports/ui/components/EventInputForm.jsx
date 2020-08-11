@@ -337,13 +337,15 @@ class EventInputForm extends React.Component {
                       value={this.state.eventName}
                       onChange={this.handleChange}
                     />
-                    <Form.Input label='Location'>
+                    <Form.Field>
+                      <label>Location</label>
                       <GooglePlacesAutocomplete
+                        initialValue={this.state.location}
                         apiKey='AIzaSyDUy3PQMDR4Q_wx-8ZSH0p45R8_qgQRNx0'
                         onSelect={this.locationSelect}
                         placeholder='Address'
                       />
-                    </Form.Input>
+                    </Form.Field>
                     {this.state.allDay === false ? (
                       <Form.Group>
                         {/* The Start Date Input */}
