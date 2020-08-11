@@ -61,7 +61,7 @@ function convertEvent(event) {
       newLocation += `${locationArray[i]}\\, `;
     }
     newLocation += locationArray[locationArray.length - 1];
-    eventICS += `LOCATION: ${newLocation}\n`;
+    eventICS += `LOCATION:${newLocation}\n`;
   }
 
   // Add organizer
