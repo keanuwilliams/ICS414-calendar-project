@@ -37,6 +37,20 @@ function convertEvent(event) {
     eventICS += `DTSTART:${start}\nDTEND:${end}\n`;
   }
 
+  // Add frequency if specified
+  if (event.repeatFreq !== 'DOES NOT REPEAT') {
+    if (event.repeatFreq === 'YEARLY') {
+      eventICS += 'RRULE:FREQ=YEARLY';
+    } else if (event.repeatFreq === 'MONTHLY') {
+      eventICS += 'RRULE:FREQ=MONTHLY';
+    } else if (event.repeatFreq === 'WEEKLY') {
+      eventICS += 'RRULE:FREQ=WEEKLY';
+    } else if (event.repeatFreq === 'DAILY') {
+      eventICS += 'RRULE:FREQ=DAILY';
+    }
+    eventICS += '\n';
+  }
+
   // Add geoposition
   if (event.geolocation !== '') {
     eventICS += `GEO:${event.geolocation}\n`;

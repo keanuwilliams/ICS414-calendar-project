@@ -22,12 +22,24 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 const events = []; // Events to be added to .ics file
 let userEmail = ''; // The user's email
+
+const repeatOptions = [
+  { key: 'none', text: 'Does Not Repeat', value: 'DOES NOT REPEAT' },
+  { key: 'day', text: 'Daily', value: 'DAILY' },
+  { key: 'week', text: 'Weekly', value: 'WEEKLY' },
+  { key: 'month', text: 'Monthly', value: 'MONTHLY' },
+  { key: 'year', text: 'Yearly', value: 'YEARLY' },
+];
+const endOptions = [
+  { key: 'none', text: 'Does Not End', value: 'DOES NOT END' },
+  { key: 'num', text: 'After', value: 'OCCURRENCE' },
+];
 const priorityOptions = [
   // The options for priority field in form
-  { key: 'n', text: 'None', value: 0 },
-  { key: 'l', text: 'Low', value: 6 },
-  { key: 'm', text: 'Medium', value: 5 },
-  { key: 'h', text: 'High', value: 1 },
+  { key: 'none', text: 'None', value: 0 },
+  { key: 'low', text: 'Low', value: 6 },
+  { key: 'med', text: 'Medium', value: 5 },
+  { key: 'high', text: 'High', value: 1 },
 ];
 const classOptions = [
   { key: 'pub', text: 'Public', value: 'PUBLIC' },
@@ -49,6 +61,11 @@ class EventInputForm extends React.Component {
       startDate: '',
       endDate: '',
       allDay: false,
+      repeatFreq: 'DOES NOT REPEAT', // i.e., daily, weekly, monthly, yearly
+      repeatInterval: 1, // the interval for the repeat
+      repeatEnd: 'DOES NOT END', // the option the user selected
+      repeatUntil: '', // the date the user selected if they selected 'on' in repeatEnd
+      repeatCount: 1, // the occurrence the user selected if they selected 'after' in repeatEnd
       priority: 0,
       classification: 'PUBLIC',
       organizer: '',
@@ -119,6 +136,11 @@ class EventInputForm extends React.Component {
       startDate: start,
       endDate: end,
       allDay: this.state.allDay,
+      repeatFreq: this.state.repeatFreq, // i.e., daily, weekly, monthly, yearly
+      repeatInterval: this.state.repeatInterval, // the interval for the repeat
+      repeatEnd: this.state.repeatEnd, // the option the user selected
+      repeatUntil: this.state.repeatUntil, // the date the user selected if they selected 'on' in repeatEnd
+      repeatCount: '', // the occurrence the user selected if they selected 'after' in repeatEnd
       priority: this.state.priority,
       classification: this.state.classification,
       organizer: this.state.organizer,
@@ -254,7 +276,11 @@ class EventInputForm extends React.Component {
       startDate: '',
       endDate: '',
       allDay: false,
-      priority: 0,
+      repeatFreq: 'DOES NOT REPEAT', // i.e., daily, weekly, monthly, yearly
+      repeatInterval: 1, // the interval for the repeat
+      repeatEnd: 'DOES NOT END', // the option the user selected
+      repeatUntil: '', // the date the user selected if they selected 'on' in repeatEnd
+      repeatCount: 1, // the occurrence the user selected if they selected 'after' in repeatEnd
       classification: 'PUBLIC',
       organizer: '',
       organizerAdded: false,
@@ -297,12 +323,10 @@ class EventInputForm extends React.Component {
             <Grid.Row centered>
               <div>
                 <h2>
-                  Before you are able to create an event, please enter your
-                  email address.
+                  Before you are able to create an event, please enter your email address.
                 </h2>
                 <h3 style={{ color: 'red', marginTop: '-5px' }}>
-                  You will not be able to change it, unless you refresh the
-                  page.
+                  You will not be able to change it, unless you refresh the page.
                 </h3>
               </div>
               <Input
@@ -322,11 +346,10 @@ class EventInputForm extends React.Component {
             </Grid.Row>
           ) : (
             <Grid.Row centered>
-              <h2>
-                Disclaimer: All events created will be in the Pacific/Honolulu
-                Timezone
+              <h2 style={{ paddingBottom: '10px' }}>
+                Disclaimer: All events created will be in the Pacific/Honolulu Timezone
               </h2>
-              <Grid.Column width={8}>
+              <Grid.Column width={8} id='eventForm'>
                 <Form onSubmit={this.submit}>
                   <Segment>
                     <h3>Create Event</h3>
@@ -337,15 +360,6 @@ class EventInputForm extends React.Component {
                       value={this.state.eventName}
                       onChange={this.handleChange}
                     />
-                    <Form.Field>
-                      <label>Location</label>
-                      <GooglePlacesAutocomplete
-                        initialValue={this.state.location}
-                        apiKey='AIzaSyDUy3PQMDR4Q_wx-8ZSH0p45R8_qgQRNx0'
-                        onSelect={this.locationSelect}
-                        placeholder='Address'
-                      />
-                    </Form.Field>
                     {this.state.allDay === false ? (
                       <Form.Group>
                         {/* The Start Date Input */}
@@ -427,6 +441,15 @@ class EventInputForm extends React.Component {
                       onChange={this.handleAllDay}
                       checked={this.state.allDay}
                     />
+                    <Form.Field>
+                      <label>Location</label>
+                      <GooglePlacesAutocomplete
+                        initialValue={this.state.location}
+                        apiKey='AIzaSyDUy3PQMDR4Q_wx-8ZSH0p45R8_qgQRNx0'
+                        onSelect={this.locationSelect}
+                        placeholder='Address'
+                      />
+                    </Form.Field>
                     <Form.Group>
                       <Form.Field
                         control={Select}

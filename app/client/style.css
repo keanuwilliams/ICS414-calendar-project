@@ -1,6 +1,9 @@
 #page {
     padding-top: 20px;
 }
+#eventForm {
+    margin-left: -15px;
+}
 #guests {
     padding-top: 10px;
     margin-left: -15px;
