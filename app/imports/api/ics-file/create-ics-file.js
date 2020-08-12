@@ -25,7 +25,11 @@ function convertEvent(event) {
   let eventICS; // Event to be added
   const start = convertDate(event.startDate, event.allDay);
   const end = convertDate(event.endDate, event.allDay);
-  let newLocation;
+  let newLocation; let until;
+
+  if (event.repeatFreq !== 'NONE' && event.repeatEnd === 'UNTIL') {
+    until = convertDate(event.repeatUntil, false);
+  }
 
   // Begin adding event
   eventICS = `BEGIN:VEVENT\nSUMMARY:${event.eventName}\n`;
@@ -51,7 +55,7 @@ function convertEvent(event) {
     if (event.repeatEnd === 'OCCURRENCE') {
       eventICS += `;COUNT=${event.eventCount}`;
     } else if (event.repeatEnd === 'UNTIL') {
-      eventICS += `;UNTIL=${event.repeatUntil}`;
+      eventICS += `;UNTIL=${until}`;
     }
     if (event.repeatInterval !== 1) {
       eventICS += `;INTERVAL=${event.repeatInterval}`;

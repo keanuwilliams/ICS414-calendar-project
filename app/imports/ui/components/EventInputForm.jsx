@@ -35,6 +35,7 @@ const repeatOptions = [
 const endOptions = [
   { key: 'none', text: 'Never', value: 'NEVER' },
   { key: 'occ', text: 'After', value: 'OCCURRENCE' },
+  { key: 'unt', text: 'Until', value: 'UNTIL' },
 ];
 const priorityOptions = [
   // The options for priority field in form
@@ -102,6 +103,10 @@ class EventInputForm extends React.Component {
 
   endDateChange = (date) => {
     this.setState({ endDate: date });
+  };
+
+  repeatUntilChange = (date) => {
+    this.setState({ repeatUntil: date });
   };
 
   handleAllDay = () => this.setState((prevState) => ({ allDay: !prevState.allDay }));
@@ -201,6 +206,22 @@ class EventInputForm extends React.Component {
                     </Button.Group>
                   </div>
                 ) : ('')}
+                {this.state.repeatEnd === 'UNTIL' ? (
+                  <div>
+                    <DatePicker
+                      isClearable
+                      name='repeatUntil'
+                      placeholderText='End Date'
+                      todayButton='Today'
+                      selected={this.state.repeatUntil}
+                      onChange={this.repeatUntilChange}
+                      startDate={this.state.startDate}
+                      endDate={this.state.endDate}
+                      minDate={this.state.endDate}
+                      dateFormat='MM/dd/yyyy'
+                    />
+                  </div>
+                ) : ('')}
               </div>
             </Grid.Column>
           </Grid.Row>
@@ -213,6 +234,11 @@ class EventInputForm extends React.Component {
   addEvent = () => {
     const start = this.state.startDate.toISOString();
     const end = this.state.endDate.toISOString();
+    let until;
+
+    if (this.state.repeatFreq !== 'NONE' && this.state.repeatEnd === 'UNTIL') {
+      until = this.state.repeatUntil.toISOString();
+    }
 
     const event = {
       userEmail: this.state.userEmail,
@@ -225,7 +251,7 @@ class EventInputForm extends React.Component {
       repeatFreq: this.state.repeatFreq, // i.e., daily, weekly, monthly, yearly
       repeatInterval: this.state.repeatInterval, // the interval for the repeat
       repeatEnd: this.state.repeatEnd, // the option the user selected
-      repeatUntil: this.state.repeatUntil, // the date the user selected if they selected 'on' in repeatEnd
+      repeatUntil: until, // the date the user selected if they selected 'on' in repeatEnd
       repeatCount: '', // the occurrence the user selected if they selected 'after' in repeatEnd
       priority: this.state.priority,
       classification: this.state.classification,
@@ -336,6 +362,11 @@ class EventInputForm extends React.Component {
       // If dates are empty
       // Display error message
       this.setState({ error: 'please enter a start and end date.' });
+      this.setState({ success: '' });
+    } else if (this.state.repeatFreq !== 'NONE' &&
+                this.state.repeatEnd === 'UNTIL' &&
+                this.state.repeatUntil < this.state.endDate) {
+      this.setState({ error: 'repeat until date ends before the event end date.' });
       this.setState({ success: '' });
     } else {
       // Else add the event
