@@ -9,6 +9,8 @@ import {
   Input,
   Button,
   Table,
+  Modal,
+  Header,
   Message,
 } from 'semantic-ui-react';
 import DatePicker from 'react-datepicker';
@@ -24,15 +26,15 @@ const events = []; // Events to be added to .ics file
 let userEmail = ''; // The user's email
 
 const repeatOptions = [
-  { key: 'none', text: 'Does Not Repeat', value: 'DOES NOT REPEAT' },
+  { key: 'none', text: 'Does Not Repeat', value: 'NONE' },
   { key: 'day', text: 'Daily', value: 'DAILY' },
   { key: 'week', text: 'Weekly', value: 'WEEKLY' },
   { key: 'month', text: 'Monthly', value: 'MONTHLY' },
   { key: 'year', text: 'Yearly', value: 'YEARLY' },
 ];
 const endOptions = [
-  { key: 'none', text: 'Does Not End', value: 'DOES NOT END' },
-  { key: 'num', text: 'After', value: 'OCCURRENCE' },
+  { key: 'none', text: 'Never', value: 'NEVER' },
+  { key: 'occ', text: 'After', value: 'OCCURRENCE' },
 ];
 const priorityOptions = [
   // The options for priority field in form
@@ -61,9 +63,9 @@ class EventInputForm extends React.Component {
       startDate: '',
       endDate: '',
       allDay: false,
-      repeatFreq: 'DOES NOT REPEAT', // i.e., daily, weekly, monthly, yearly
+      repeatFreq: 'NONE', // i.e., daily, weekly, monthly, yearly
       repeatInterval: 1, // the interval for the repeat
-      repeatEnd: 'DOES NOT END', // the option the user selected
+      repeatEnd: 'NEVER', // the option the user selected
       repeatUntil: '', // the date the user selected if they selected 'on' in repeatEnd
       repeatCount: 1, // the occurrence the user selected if they selected 'after' in repeatEnd
       priority: 0,
@@ -122,6 +124,62 @@ class EventInputForm extends React.Component {
     }
     this.forceUpdate();
   };
+
+  /** Lower the count of the number of occurrences of an event */
+  decrementCount = () => {
+    if (this.state.repeatCount > 1) {
+      const count = this.state.repeatCount - 1;
+      this.setState({ repeatCount: count });
+    }
+  }
+
+  /** Increase the count of the number of occurrences of an event */
+  incrementCount = () => {
+    const count = this.state.repeatCount + 1;
+    this.setState({ repeatCount: count });
+  }
+
+  /** The options for repeating an event will appear */
+  showRepeatModal = () => (
+    <Modal
+      closeIcon
+      trigger={<a style={{ cursor: 'pointer' }}>Repeat Options</a>}
+    >
+      <Header icon='sync alternate' content='Repeat Options'/>
+      <Modal.Content>
+        <Grid>
+          <Grid.Row>
+            <Grid.Column width={8}>
+              <div>
+                <h4>Ends</h4>
+                <Select
+                  name='repeatEnd'
+                  options={endOptions}
+                  onChange={this.handleChange}
+                  value={this.state.repeatEnd}
+                />
+              </div>
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row>
+            <Grid.Column width={8}>
+              <div>
+                {this.state.repeatEnd === 'OCCURRENCE' ? (
+                  <div>
+                    After {this.state.repeatCount} occurrence(s)
+                    <Button.Group style={{ paddingLeft: '10px' }}>
+                      <Button icon='down chevron' onClick={this.decrementCount}/>
+                      <Button icon='up chevron' onClick={this.incrementCount}/>
+                    </Button.Group>
+                  </div>
+                ) : ('')}
+              </div>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+      </Modal.Content>
+    </Modal>
+  )
 
   /** Add an event to the events array */
   addEvent = () => {
@@ -276,9 +334,9 @@ class EventInputForm extends React.Component {
       startDate: '',
       endDate: '',
       allDay: false,
-      repeatFreq: 'DOES NOT REPEAT', // i.e., daily, weekly, monthly, yearly
+      repeatFreq: 'NONE', // i.e., daily, weekly, monthly, yearly
       repeatInterval: 1, // the interval for the repeat
-      repeatEnd: 'DOES NOT END', // the option the user selected
+      repeatEnd: 'NEVER', // the option the user selected
       repeatUntil: '', // the date the user selected if they selected 'on' in repeatEnd
       repeatCount: 1, // the occurrence the user selected if they selected 'after' in repeatEnd
       classification: 'PUBLIC',
@@ -441,6 +499,21 @@ class EventInputForm extends React.Component {
                       onChange={this.handleAllDay}
                       checked={this.state.allDay}
                     />
+                    <Form.Group>
+                      <Form.Field
+                        control={Select}
+                        label='Repeat'
+                        name='repeatFreq'
+                        options={repeatOptions}
+                        onChange={this.handleChange}
+                        value={this.state.repeatFreq}
+                      />
+                      {this.state.repeatFreq !== 'NONE' ? (
+                        <div style={{ paddingTop: '30px' }}>
+                          {this.showRepeatModal()}
+                        </div>
+                      ) : ('')}
+                    </Form.Group>
                     <Form.Field>
                       <label>Location</label>
                       <GooglePlacesAutocomplete
@@ -499,7 +572,7 @@ class EventInputForm extends React.Component {
                       <div>
                         {this.state.organizer} (
                         <a
-                          style={{ color: 'red' }}
+                          style={{ color: 'red', cursor: 'pointer' }}
                           onClick={this.removeOrganizer}
                         >
                           x

@@ -38,7 +38,7 @@ function convertEvent(event) {
   }
 
   // Add frequency if specified
-  if (event.repeatFreq !== 'DOES NOT REPEAT') {
+  if (event.repeatFreq !== 'NONE') {
     if (event.repeatFreq === 'YEARLY') {
       eventICS += 'RRULE:FREQ=YEARLY';
     } else if (event.repeatFreq === 'MONTHLY') {
@@ -47,6 +47,9 @@ function convertEvent(event) {
       eventICS += 'RRULE:FREQ=WEEKLY';
     } else if (event.repeatFreq === 'DAILY') {
       eventICS += 'RRULE:FREQ=DAILY';
+    }
+    if (event.repeatEnd === 'OCCURRENCE') {
+      eventICS += `;COUNT=${event.eventCount}`;
     }
     eventICS += '\n';
   }
