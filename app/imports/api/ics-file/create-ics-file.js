@@ -53,7 +53,7 @@ function convertEvent(event) {
       eventICS += 'RRULE:FREQ=DAILY';
     }
     if (event.repeatEnd === 'OCCURRENCE') {
-      eventICS += `;COUNT=${event.eventCount}`;
+      eventICS += `;COUNT=${event.repeatCount}`;
     } else if (event.repeatEnd === 'UNTIL') {
       eventICS += `;UNTIL=${until}`;
     }
