@@ -37,7 +37,7 @@ function convertEvent(event) {
     eventICS += `DTSTART:${start}\nDTEND:${end}\n`;
   }
 
-  // Add frequency if specified
+  // Add recurring details if specified
   if (event.repeatFreq !== 'NONE') {
     if (event.repeatFreq === 'YEARLY') {
       eventICS += 'RRULE:FREQ=YEARLY';
@@ -50,6 +50,11 @@ function convertEvent(event) {
     }
     if (event.repeatEnd === 'OCCURRENCE') {
       eventICS += `;COUNT=${event.eventCount}`;
+    } else if (event.repeatEnd === 'UNTIL') {
+      eventICS += `;UNTIL=${event.repeatUntil}`;
+    }
+    if (event.repeatInterval !== 1) {
+      eventICS += `;INTERVAL=${event.repeatInterval}`;
     }
     eventICS += '\n';
   }

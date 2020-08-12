@@ -139,6 +139,20 @@ class EventInputForm extends React.Component {
     this.setState({ repeatCount: count });
   }
 
+  /** Lower the count of the number of occurrences of an event */
+  decrementInterval = () => {
+    if (this.state.repeatInterval > 1) {
+      const count = this.state.repeatInterval - 1;
+      this.setState({ repeatInterval: count });
+    }
+  }
+
+  /** Increase the count of the number of occurrences of an event */
+  incrementInterval = () => {
+    const count = this.state.repeatInterval + 1;
+    this.setState({ repeatInterval: count });
+  }
+
   /** The options for repeating an event will appear */
   showRepeatModal = () => (
     <Modal
@@ -151,13 +165,27 @@ class EventInputForm extends React.Component {
           <Grid.Row>
             <Grid.Column width={8}>
               <div>
-                <h4>Ends</h4>
+                <h4>Repeat Ends</h4>
                 <Select
                   name='repeatEnd'
                   options={endOptions}
                   onChange={this.handleChange}
                   value={this.state.repeatEnd}
                 />
+              </div>
+            </Grid.Column>
+            <Grid.Column width={8}>
+              <div>
+                <h4>Repeat Interval</h4>
+                Repeat every {this.state.repeatInterval}
+                {this.state.repeatFreq === 'DAILY' ? (' day(s)') : ('')}
+                {this.state.repeatFreq === 'WEEKLY' ? (' week(s)') : ('')}
+                {this.state.repeatFreq === 'MONTHLY' ? (' month(s)') : ('')}
+                {this.state.repeatFreq === 'YEARLY' ? (' year(s)') : ('')}
+                <Button.Group style={{ paddingLeft: '10px' }}>
+                  <Button icon='down chevron' onClick={this.decrementInterval}/>
+                  <Button icon='up chevron' onClick={this.incrementInterval}/>
+                </Button.Group>
               </div>
             </Grid.Column>
           </Grid.Row>
