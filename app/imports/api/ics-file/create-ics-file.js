@@ -33,20 +33,20 @@ function convertEvent(event) {
   }
 
   // Begin adding event
-  eventICS = `BEGIN:VEVENT\nSUMMARY:${event.eventName}\n`;
+  eventICS = `BEGIN:VEVENT\r\nSUMMARY:${event.eventName}\r\n`;
 
   // Create unique value for UID, current time in milliseconds
-  eventICS += `UID:${Date.now()}@hawaii.edu\n`;
+  eventICS += `UID:${Date.now()}@hawaii.edu\r\n`;
 
   // Add DTSTAMP for current time event was created
   currentDate = new Date();
-  eventICS += `DTSTAMP:${convertDate(currentDate.toISOString(), false)}\n`;
+  eventICS += `DTSTAMP:${convertDate(currentDate.toISOString(), false)}\r\n`;
 
   // Add start and end date
   if (event.allDay) {
-    eventICS += `DTSTART;VALUE=DATE:${start}\nDTEND;VALUE=DATE:${end}\n`;
+    eventICS += `DTSTART;VALUE=DATE:${start}\nDTEND;VALUE=DATE:${end}\r\n`;
   } else {
-    eventICS += `DTSTART:${start}\nDTEND:${end}\n`;
+    eventICS += `DTSTART:${start}\nDTEND:${end}\r\n`;
   }
 
   // Add recurring details if specified
@@ -68,12 +68,12 @@ function convertEvent(event) {
     if (event.repeatInterval !== 1) {
       eventICS += `;INTERVAL=${event.repeatInterval}`;
     }
-    eventICS += "\n";
+    eventICS += "\r\n";
   }
 
   // Add geoposition
   if (event.geolocation !== "") {
-    eventICS += `GEO:${event.geolocation}\n`;
+    eventICS += `GEO:${event.geolocation}\r\n`;
   }
 
   // Add location
@@ -84,15 +84,15 @@ function convertEvent(event) {
       newLocation += `${locationArray[i]}\\,`;
     }
     newLocation += locationArray[locationArray.length - 1];
-    eventICS += `LOCATION:${newLocation}\n`;
+    eventICS += `LOCATION:${newLocation}\r\n`;
   }
 
   // Add organizer
   if (event.organizer !== "") {
     if (event.organizer !== event.userEmail) {
-      eventICS += `ORGANIZER;SENT-BY="${event.userEmail}":mailto:${event.organizer}\n`;
+      eventICS += `ORGANIZER;SENT-BY="${event.userEmail}":mailto:${event.organizer}\r\n`;
     } else {
-      eventICS += `ORGANIZER:MAILTO:${event.userEmail}\n`;
+      eventICS += `ORGANIZER:MAILTO:${event.userEmail}\r\n`;
     }
   }
 
@@ -100,7 +100,7 @@ function convertEvent(event) {
   for (let i = 0; i < event.guests.length; i++) {
     eventICS += `ATTENDEE;RSVP=${event.rsvp.toString().toUpperCase()}:mailto:${
       event.guests[i]
-    }\n`;
+    }\r\n`;
   }
 
   // Add resources
@@ -109,14 +109,14 @@ function convertEvent(event) {
     for (let i = 1; i < event.resources.length; i++) {
       eventICS += `,${event.resources[i].toUpperCase()}`;
     }
-    eventICS += "\n";
+    eventICS += "\r\n";
   }
 
   // Add priority and classification then end
   eventICS +=
-    `PRIORITY:${event.priority}\n` +
-    `CLASS:${event.classification}\n` +
-    "END:VEVENT\n";
+    `PRIORITY:${event.priority}\r\n` +
+    `CLASS:${event.classification}\r\n` +
+    "END:VEVENT\r\n";
 
   return eventICS;
 }
@@ -144,25 +144,25 @@ function createICSFile(events) {
   if (events.length !== 0) {
     // Begin creating the .ics file
     file =
-      "BEGIN:VCALENDAR\nPRODID:-//Team Goblet//ICS-414//SU2020\nVERSION:2.0\n";
+      "BEGIN:VCALENDAR\r\nPRODID:-//Team Goblet//ICS-414//SU2020\r\nVERSION:2.0\r\n";
 
     // Begin adding the Pacific/Honolulu timezone
-    file += "BEGIN:VTIMEZONE\nTZID:Pacific/Honolulu\n";
+    file += "BEGIN:VTIMEZONE\r\nTZID:Pacific/Honolulu\r\n";
 
     file +=
-      "BEGIN:DAYLIGHT\nTZOFFSETFROM:-1030\nTZOFFSETTO:-0930\nDTSTART:19330430T020000\nTZNAME:HDT\nEND:DAYLIGHT\n";
+      "BEGIN:DAYLIGHT\r\nTZOFFSETFROM:-1030\r\nTZOFFSETTO:-0930\r\nDTSTART:19330430T020000\r\nTZNAME:HDT\r\nEND:DAYLIGHT\r\n";
 
     file +=
-      "BEGIN:STANDARD\nTZOFFSETFROM:-1030\nTZOFFSETTO:-1000\nDTSTART:19470608T020000\nTZNAME:HST\nEND:STANDARD\n";
+      "BEGIN:STANDARD\r\nTZOFFSETFROM:-1030\r\nTZOFFSETTO:-1000\r\nDTSTART:19470608T020000\r\nTZNAME:HST\r\nEND:STANDARD\r\n";
 
-    file += "END:VTIMEZONE\n";
+    file += "END:VTIMEZONE\r\n";
 
     // Add the events
     for (let i = 0; i < events.length; i++) {
       file += convertEvent(events[i]);
     }
     // End the .ics file
-    file += "END:VCALENDAR\n";
+    file += "END:VCALENDAR\r\n";
   }
   return file;
 }
