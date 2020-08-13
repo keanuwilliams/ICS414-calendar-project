@@ -26,6 +26,7 @@ function convertEvent(event) {
   const end = convertDate(event.endDate, event.allDay);
   let newLocation;
   let until;
+  let currentDate;
 
   if (event.repeatFreq !== "NONE" && event.repeatEnd === "UNTIL") {
     until = convertDate(event.repeatUntil, false);
@@ -33,6 +34,10 @@ function convertEvent(event) {
 
   // Begin adding event
   eventICS = `BEGIN:VEVENT\nSUMMARY:${event.eventName}\n`;
+
+  // Add DTSTAMP for current time event was created
+  currentDate = new Date();
+  eventICS += `DTSTAMP:${convertDate(currentDate.toISOString(), false)}\n`;
 
   // Add start and end date
   if (event.allDay) {
@@ -136,7 +141,7 @@ function createICSFile(events) {
   if (events.length !== 0) {
     // Begin creating the .ics file
     file =
-      "BEGIN:VCALENDAR\nPRODID:-//Team Goblet//ICS-414//SU2020//\nVERSION:2.0\n";
+      "BEGIN:VCALENDAR\nPRODID:-//Team Goblet//ICS-414//SU2020\nVERSION:2.0\n";
 
     // Begin adding the Pacific/Honolulu timezone
     file += "BEGIN:VTIMEZONE\nTZID:Pacific/Honolulu\n";
