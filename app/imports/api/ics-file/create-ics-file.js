@@ -35,6 +35,9 @@ function convertEvent(event) {
   // Begin adding event
   eventICS = `BEGIN:VEVENT\nSUMMARY:${event.eventName}\n`;
 
+  // Create unique value for UID, current time in milliseconds
+  eventICS += `UID:${Date.now()}@hawaii.edu\n`;
+
   // Add DTSTAMP for current time event was created
   currentDate = new Date();
   eventICS += `DTSTAMP:${convertDate(currentDate.toISOString(), false)}\n`;
