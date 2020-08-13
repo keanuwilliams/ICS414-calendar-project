@@ -1,6 +1,5 @@
-import saveAs from 'file-saver';
-import EventInputForm from '../../ui/components/EventInputForm';
-// import { geocodeByAddress, getLatLng } from 'react-google-places-autocomplete';
+import saveAs from "file-saver";
+import EventInputForm from "../../ui/components/EventInputForm";
 
 /** Convert user-input date to date to be used in .ics file */
 function convertDate(date, allDay) {
@@ -25,9 +24,10 @@ function convertEvent(event) {
   let eventICS; // Event to be added
   const start = convertDate(event.startDate, event.allDay);
   const end = convertDate(event.endDate, event.allDay);
-  let newLocation; let until;
+  let newLocation;
+  let until;
 
-  if (event.repeatFreq !== 'NONE' && event.repeatEnd === 'UNTIL') {
+  if (event.repeatFreq !== "NONE" && event.repeatEnd === "UNTIL") {
     until = convertDate(event.repeatUntil, false);
   }
 
@@ -42,36 +42,36 @@ function convertEvent(event) {
   }
 
   // Add recurring details if specified
-  if (event.repeatFreq !== 'NONE') {
-    if (event.repeatFreq === 'YEARLY') {
-      eventICS += 'RRULE:FREQ=YEARLY';
-    } else if (event.repeatFreq === 'MONTHLY') {
-      eventICS += 'RRULE:FREQ=MONTHLY';
-    } else if (event.repeatFreq === 'WEEKLY') {
-      eventICS += 'RRULE:FREQ=WEEKLY';
-    } else if (event.repeatFreq === 'DAILY') {
-      eventICS += 'RRULE:FREQ=DAILY';
+  if (event.repeatFreq !== "NONE") {
+    if (event.repeatFreq === "YEARLY") {
+      eventICS += "RRULE:FREQ=YEARLY";
+    } else if (event.repeatFreq === "MONTHLY") {
+      eventICS += "RRULE:FREQ=MONTHLY";
+    } else if (event.repeatFreq === "WEEKLY") {
+      eventICS += "RRULE:FREQ=WEEKLY";
+    } else if (event.repeatFreq === "DAILY") {
+      eventICS += "RRULE:FREQ=DAILY";
     }
-    if (event.repeatEnd === 'OCCURRENCE') {
+    if (event.repeatEnd === "OCCURRENCE") {
       eventICS += `;COUNT=${event.repeatCount}`;
-    } else if (event.repeatEnd === 'UNTIL') {
+    } else if (event.repeatEnd === "UNTIL") {
       eventICS += `;UNTIL=${until}`;
     }
     if (event.repeatInterval !== 1) {
       eventICS += `;INTERVAL=${event.repeatInterval}`;
     }
-    eventICS += '\n';
+    eventICS += "\n";
   }
 
   // Add geoposition
-  if (event.geolocation !== '') {
+  if (event.geolocation !== "") {
     eventICS += `GEO:${event.geolocation}\n`;
   }
 
   // Add location
-  if (event.location !== '') {
-    const locationArray = event.location.split(',');
-    newLocation = '';
+  if (event.location !== "") {
+    const locationArray = event.location.split(",");
+    newLocation = "";
     for (let i = 0; i < locationArray.length - 1; i++) {
       newLocation += `${locationArray[i]}\\,`;
     }
@@ -80,7 +80,7 @@ function convertEvent(event) {
   }
 
   // Add organizer
-  if (event.organizer !== '') {
+  if (event.organizer !== "") {
     if (event.organizer !== event.userEmail) {
       eventICS += `ORGANIZER;SENT-BY="${event.userEmail}":mailto:${event.organizer}\n`;
     } else {
@@ -101,14 +101,14 @@ function convertEvent(event) {
     for (let i = 1; i < event.resources.length; i++) {
       eventICS += `,${event.resources[i].toUpperCase()}`;
     }
-    eventICS += '\n';
+    eventICS += "\n";
   }
 
   // Add priority and classification then end
   eventICS +=
     `PRIORITY:${event.priority}\n` +
     `CLASS:${event.classification}\n` +
-    'END:VEVENT\n';
+    "END:VEVENT\n";
 
   return eventICS;
 }
@@ -131,29 +131,30 @@ function createICSFile(events) {
    * And aspects of recurring events
    */
 
-  let file = '';
+  let file = "";
 
   if (events.length !== 0) {
     // Begin creating the .ics file
-    file = 'BEGIN:VCALENDAR\nVERSION:2.0\n';
+    file =
+      "BEGIN:VCALENDAR\nPRODID:-//Team Goblet//ICS-414//SU2020//\nVERSION:2.0\n";
 
     // Begin adding the Pacific/Honolulu timezone
-    file += 'BEGIN:VTIMEZONE\nTZID:Pacific/Honolulu\n';
+    file += "BEGIN:VTIMEZONE\nTZID:Pacific/Honolulu\n";
 
     file +=
-      'BEGIN:DAYLIGHT\nTZOFFSETFROM:-1030\nTZOFFSETTO:-0930\nDTSTART:19330430T020000\nTZNAME:HDT\nEND:DAYLIGHT\n';
+      "BEGIN:DAYLIGHT\nTZOFFSETFROM:-1030\nTZOFFSETTO:-0930\nDTSTART:19330430T020000\nTZNAME:HDT\nEND:DAYLIGHT\n";
 
     file +=
-      'BEGIN:STANDARD\nTZOFFSETFROM:-1030\nTZOFFSETTO:-1000\nDTSTART:19470608T020000\nTZNAME:HST\nEND:STANDARD\n';
+      "BEGIN:STANDARD\nTZOFFSETFROM:-1030\nTZOFFSETTO:-1000\nDTSTART:19470608T020000\nTZNAME:HST\nEND:STANDARD\n";
 
-    file += 'END:VTIMEZONE\n';
+    file += "END:VTIMEZONE\n";
 
     // Add the events
     for (let i = 0; i < events.length; i++) {
       file += convertEvent(events[i]);
     }
     // End the .ics file
-    file += 'END:VCALENDAR\n';
+    file += "END:VCALENDAR\n";
   }
   return file;
 }
@@ -163,12 +164,12 @@ export function download() {
   const icsFile = createICSFile(EventInputForm.getEvents());
   const userEmail = EventInputForm.getUserEmail();
   let success = false;
-  if (icsFile !== '') {
-    if (userEmail === '') {
+  if (icsFile !== "") {
+    if (userEmail === "") {
       // The comment below used to suppress Blob being undefined
       // eslint-disable-next-line no-undef
       const blob = new Blob([icsFile]);
-      saveAs(blob, 'events.ics');
+      saveAs(blob, "events.ics");
     } else {
       // The comment below used to suppress Blob being undefined
       // eslint-disable-next-line no-undef
