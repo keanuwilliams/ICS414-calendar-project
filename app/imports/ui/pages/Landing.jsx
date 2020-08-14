@@ -1,28 +1,59 @@
 import React from 'react';
-import { Grid, Button } from 'semantic-ui-react';
-import Planner from '../components/Planner';
+import {
+    Grid,
+    Button,
+    Message,
+} from 'semantic-ui-react';
+import { download } from '../../api/ics-file/create-ics-file';
 import EventInputForm from '../components/EventInputForm';
-import { createSample } from '../../api/ics-file/create-ics-file';
+import EventDisplay from '../components/EventDisplay';
 
 /** A simple static component to render some text for the landing page. */
 class Landing extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.state = { success: true };
+    }
+
+    downloadSuccess = () => {
+        const isSuccessful = download();
+        this.setState({ success: isSuccessful });
+    }
+
     render() {
         return (
-            <Grid verticalAlign='middle' textAlign='center' container>
+            <Grid textAlign='center' container>
                 <Grid.Row>
-                    <Grid.Column width={8}>
-                        <h1>TheGoblet&apos;s Event Planner!</h1>
-                        <p>Click below to download our sample .ics file.</p>
-                        <Button content="Download" onClick={ createSample } />
+                    <Grid.Column>
+                        <h1>TheGoblet&apos;s Event Planner</h1>
+                        <p>Click the button below to download your file.</p>
+                        <Button
+                          primary
+                          content='Download File'
+                          onClick={ this.downloadSuccess }
+                        />
                     </Grid.Column>
                 </Grid.Row>
-                <Grid.Row>
-                    <Grid.Column width={8}>
-                        <Planner />
-                    </Grid.Column>
-                    <Grid.Column textAlign='left' width={6}>
+                <Grid.Row verticalAlign='top'>
+                    <Grid.Column textAlign='left' width={12}>
                         <EventInputForm />
+                        { this.state.success !== true ? (
+                          <Grid.Row>
+                              <Grid.Column textAlign='left' width={14}>
+                                  <Message
+                                    error
+                                    floating
+                                    header='ERROR: please add an event before trying to download.'
+                                  />
+                              </Grid.Column>
+                          </Grid.Row>
+                        ) : ('')}
+                    </Grid.Column>
+                </Grid.Row>
+                <Grid.Row verticalAlign='top'>
+                    <Grid.Column textAlign='left' width={14}>
+                        <EventDisplay />
                     </Grid.Column>
                 </Grid.Row>
             </Grid>
