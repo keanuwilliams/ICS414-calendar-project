@@ -78,6 +78,7 @@ class EventInputForm extends React.Component {
       guests: [],
       resource: '',
       resources: [],
+      open: false,
       success: '',
       error: '',
     };
@@ -108,6 +109,10 @@ class EventInputForm extends React.Component {
   repeatUntilChange = (date) => {
     this.setState({ repeatUntil: date });
   };
+
+  setOpen = (open) => {
+    this.setState({ open: open });
+  }
 
   handleAllDay = () => this.setState((prevState) => ({ allDay: !prevState.allDay }));
 
@@ -160,75 +165,85 @@ class EventInputForm extends React.Component {
 
   /** The options for repeating an event will appear */
   showRepeatModal = () => (
-    <Modal
-      closeIcon
-      trigger={<a style={{ cursor: 'pointer' }}>Repeat Options</a>}
-    >
-      <Header icon='sync alternate' content='Repeat Options'/>
-      <Modal.Content>
-        <Grid>
-          <Grid.Row>
-            <Grid.Column width={8}>
-              <div>
-                <h4>Repeat Ends</h4>
-                <Select
-                  name='repeatEnd'
-                  options={endOptions}
-                  onChange={this.handleChange}
-                  value={this.state.repeatEnd}
-                />
-              </div>
-            </Grid.Column>
-            <Grid.Column width={8}>
-              <div>
-                <h4>Repeat Interval</h4>
-                Repeat every {this.state.repeatInterval}
-                {this.state.repeatFreq === 'DAILY' ? (' day(s)') : ('')}
-                {this.state.repeatFreq === 'WEEKLY' ? (' week(s)') : ('')}
-                {this.state.repeatFreq === 'MONTHLY' ? (' month(s)') : ('')}
-                {this.state.repeatFreq === 'YEARLY' ? (' year(s)') : ('')}
-                <Button.Group style={{ paddingLeft: '10px' }}>
-                  <Button icon='down chevron' onClick={this.decrementInterval}/>
-                  <Button icon='up chevron' onClick={this.incrementInterval}/>
-                </Button.Group>
-              </div>
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row>
-            <Grid.Column width={8}>
-              <div>
-                {this.state.repeatEnd === 'OCCURRENCE' ? (
-                  <div>
-                    After {this.state.repeatCount} occurrence(s)
-                    <Button.Group style={{ paddingLeft: '10px' }}>
-                      <Button icon='down chevron' onClick={this.decrementCount}/>
-                      <Button icon='up chevron' onClick={this.incrementCount}/>
-                    </Button.Group>
-                  </div>
-                ) : ('')}
-                {this.state.repeatEnd === 'UNTIL' ? (
-                  <div>
-                    <DatePicker
-                      isClearable
-                      name='repeatUntil'
-                      placeholderText='End Date'
-                      todayButton='Today'
-                      selected={this.state.repeatUntil}
-                      onChange={this.repeatUntilChange}
-                      startDate={this.state.startDate}
-                      endDate={this.state.endDate}
-                      minDate={this.state.endDate}
-                      dateFormat='MM/dd/yyyy'
-                    />
-                  </div>
-                ) : ('')}
-              </div>
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-      </Modal.Content>
-    </Modal>
-  )
+      <Modal
+        closeIcon
+        open={this.state.open}
+        onClose={() => this.setOpen(false)}
+        onOpen={() => this.setOpen(true)}
+        trigger={<a style={{ cursor: 'pointer' }}>Repeat Options</a>}
+      >
+        <Header icon='sync alternate' content='Repeat Options'/>
+        <Modal.Content>
+          <Grid>
+            <Grid.Row>
+              <Grid.Column width={8}>
+                <div>
+                  <h4>Repeat Ends</h4>
+                  <Select
+                    name='repeatEnd'
+                    options={endOptions}
+                    onChange={this.handleChange}
+                    value={this.state.repeatEnd}
+                  />
+                </div>
+              </Grid.Column>
+              <Grid.Column width={8}>
+                <div>
+                  <h4>Repeat Interval</h4>
+                  Repeat every {this.state.repeatInterval}
+                  {this.state.repeatFreq === 'DAILY' ? (' day(s)') : ('')}
+                  {this.state.repeatFreq === 'WEEKLY' ? (' week(s)') : ('')}
+                  {this.state.repeatFreq === 'MONTHLY' ? (' month(s)') : ('')}
+                  {this.state.repeatFreq === 'YEARLY' ? (' year(s)') : ('')}
+                  <Button.Group style={{ paddingLeft: '10px' }}>
+                    <Button icon='down chevron' onClick={this.decrementInterval}/>
+                    <Button icon='up chevron' onClick={this.incrementInterval}/>
+                  </Button.Group>
+                </div>
+              </Grid.Column>
+            </Grid.Row>
+            <Grid.Row>
+              <Grid.Column width={8}>
+                <div>
+                  {this.state.repeatEnd === 'OCCURRENCE' ? (
+                    <div>
+                      After {this.state.repeatCount} occurrence(s)
+                      <Button.Group style={{ paddingLeft: '10px' }}>
+                        <Button icon='down chevron' onClick={this.decrementCount}/>
+                        <Button icon='up chevron' onClick={this.incrementCount}/>
+                      </Button.Group>
+                    </div>
+                  ) : ('')}
+                  {this.state.repeatEnd === 'UNTIL' ? (
+                    <div>
+                      <DatePicker
+                        isClearable
+                        name='repeatUntil'
+                        placeholderText='End Date'
+                        todayButton='Today'
+                        selected={this.state.repeatUntil}
+                        onChange={this.repeatUntilChange}
+                        startDate={this.state.startDate}
+                        endDate={this.state.endDate}
+                        minDate={this.state.endDate}
+                        dateFormat='MM/dd/yyyy'
+                      />
+                    </div>
+                  ) : ('')}
+                </div>
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+        </Modal.Content>
+        <Modal.Actions>
+          <Button
+            secondary
+            content='Done'
+            onClick={() => this.setOpen(false)}
+          />
+        </Modal.Actions>
+      </Modal>
+    );
 
   /** Add an event to the events array */
   addEvent = () => {
@@ -406,6 +421,7 @@ class EventInputForm extends React.Component {
       guests: [],
       resource: '',
       resources: [],
+      open: false,
     });
   };
 
@@ -726,11 +742,11 @@ class EventInputForm extends React.Component {
                           <Table.HeaderCell>Location</Table.HeaderCell>
                           <Table.HeaderCell>Start Date</Table.HeaderCell>
                           <Table.HeaderCell>End Date</Table.HeaderCell>
+                          <Table.HeaderCell>Repeat</Table.HeaderCell>
                           <Table.HeaderCell>Organizer</Table.HeaderCell>
                           <Table.HeaderCell>Guests</Table.HeaderCell>
                           <Table.HeaderCell>RSVP</Table.HeaderCell>
                           <Table.HeaderCell>Resources</Table.HeaderCell>
-                          <Table.HeaderCell>Priority</Table.HeaderCell>
                           <Table.HeaderCell>Class</Table.HeaderCell>
                         </Table.Row>
                       </Table.Header>
@@ -756,6 +772,23 @@ class EventInputForm extends React.Component {
                                   )}\n${e.endDate.substr(11, 5)} (UTC)`}
                             </Table.Cell>
                             <Table.Cell>
+                              {e.repeatFreq !== 'NONE' ? (
+                                <div>
+                                  Every {e.repeatInterval}
+                                  {e.repeatFreq === 'DAILY' ? (' day(s)') : ('')}
+                                  {e.repeatFreq === 'WEEKLY' ? (' week(s)') : ('')}
+                                  {e.repeatFreq === 'MONTHLY' ? (' month(s)') : ('')}
+                                  {e.repeatFreq === 'YEARLY' ? (' year(s)') : ('')}
+                                  {e.repeatEnd === 'UNTIL' ? (
+                                      <div> until {e.repeatUntil.substr(0, 10)}</div>
+                                  ) : ('')}
+                                  {e.repeatEnd === 'OCCURRENCE' ? (
+                                     <div> after {e.repeatCount} occurrences</div>
+                                  ) : ('')}
+                                </div>
+                              ) : ('N/A')}
+                            </Table.Cell>
+                            <Table.Cell>
                               {e.organizer === '' ? 'N/A' : e.organizer}
                             </Table.Cell>
                             <Table.Cell>
@@ -779,7 +812,6 @@ class EventInputForm extends React.Component {
                                   </div>
                                 ))}
                             </Table.Cell>
-                            <Table.Cell>{e.priority}</Table.Cell>
                             <Table.Cell>{e.classification}</Table.Cell>
                           </Table.Row>
                         ))}

@@ -12,7 +12,7 @@ class NavBar extends React.Component {
     return (
       <Menu style={menuStyle} attached="top" borderless inverted>
         <Menu.Item as={NavLink} activeClassName="" exact to="/">
-          <Header inverted as='h1'>TheGoblet&apos;s Event Planner</Header>
+          <Header inverted as='h1'>The Goblet&apos;s Event Planner</Header>
         </Menu.Item>
       </Menu>
     );
