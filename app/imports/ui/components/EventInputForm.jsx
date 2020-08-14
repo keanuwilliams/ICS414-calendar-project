@@ -34,7 +34,7 @@ const repeatOptions = [
 ];
 const endOptions = [
   { key: 'none', text: 'Never', value: 'NEVER' },
-  { key: 'occ', text: 'After', value: 'OCCURRENCE' },
+  { key: 'aft', text: 'After', value: 'AFTER' },
   { key: 'unt', text: 'Until', value: 'UNTIL' },
 ];
 const priorityOptions = [
@@ -205,7 +205,7 @@ class EventInputForm extends React.Component {
             <Grid.Row>
               <Grid.Column width={8}>
                 <div>
-                  {this.state.repeatEnd === 'OCCURRENCE' ? (
+                  {this.state.repeatEnd === 'AFTER' ? (
                     <div>
                       After {this.state.repeatCount} occurrence(s)
                       <Button.Group style={{ paddingLeft: '10px' }}>
@@ -267,7 +267,7 @@ class EventInputForm extends React.Component {
       repeatInterval: this.state.repeatInterval, // the interval for the repeat
       repeatEnd: this.state.repeatEnd, // the option the user selected
       repeatUntil: until, // the date the user selected if they selected 'until' in repeatEnd
-      repeatCount: '', // the occurrence the user selected if they selected 'after' in repeatEnd
+      repeatCount: this.state.repeatCount, // the occurrence the user selected if they selected 'after' in repeatEnd
       priority: this.state.priority,
       classification: this.state.classification,
       organizer: this.state.organizer,
@@ -783,7 +783,7 @@ class EventInputForm extends React.Component {
                                   {e.repeatEnd === 'UNTIL' ? (
                                       <div> until {e.repeatUntil.substr(0, 10)}</div>
                                   ) : ('')}
-                                  {e.repeatEnd === 'OCCURRENCE' ? (
+                                  {e.repeatEnd === 'AFTER' ? (
                                      <div> after {e.repeatCount} occurrences</div>
                                   ) : ('')}
                                 </div>

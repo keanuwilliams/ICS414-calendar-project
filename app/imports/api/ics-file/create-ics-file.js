@@ -59,7 +59,7 @@ function convertEvent(event) {
     } else if (event.repeatFreq === 'DAILY') {
       eventICS += 'RRULE:FREQ=DAILY';
     }
-    if (event.repeatEnd === 'OCCURRENCE') {
+    if (event.repeatEnd === 'AFTER') {
       eventICS += `;COUNT=${event.repeatCount}`;
     } else if (event.repeatEnd === 'UNTIL') {
       eventICS += `;UNTIL=${until}`;
