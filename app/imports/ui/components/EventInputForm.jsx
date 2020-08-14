@@ -67,7 +67,7 @@ class EventInputForm extends React.Component {
       repeatFreq: 'NONE', // i.e., daily, weekly, monthly, yearly
       repeatInterval: 1, // the interval for the repeat
       repeatEnd: 'NEVER', // the option the user selected
-      repeatUntil: '', // the date the user selected if they selected 'on' in repeatEnd
+      repeatUntil: '', // the date the user selected if they selected 'until' in repeatEnd
       repeatCount: 1, // the occurrence the user selected if they selected 'after' in repeatEnd
       priority: 0,
       classification: 'PUBLIC',
@@ -266,7 +266,7 @@ class EventInputForm extends React.Component {
       repeatFreq: this.state.repeatFreq, // i.e., daily, weekly, monthly, yearly
       repeatInterval: this.state.repeatInterval, // the interval for the repeat
       repeatEnd: this.state.repeatEnd, // the option the user selected
-      repeatUntil: until, // the date the user selected if they selected 'on' in repeatEnd
+      repeatUntil: until, // the date the user selected if they selected 'until' in repeatEnd
       repeatCount: '', // the occurrence the user selected if they selected 'after' in repeatEnd
       priority: this.state.priority,
       classification: this.state.classification,
@@ -411,8 +411,9 @@ class EventInputForm extends React.Component {
       repeatFreq: 'NONE', // i.e., daily, weekly, monthly, yearly
       repeatInterval: 1, // the interval for the repeat
       repeatEnd: 'NEVER', // the option the user selected
-      repeatUntil: '', // the date the user selected if they selected 'on' in repeatEnd
+      repeatUntil: '', // the date the user selected if they selected 'until' in repeatEnd
       repeatCount: 1, // the occurrence the user selected if they selected 'after' in repeatEnd
+      priority: 0,
       classification: 'PUBLIC',
       organizer: '',
       organizerAdded: false,
