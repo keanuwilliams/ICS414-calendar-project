@@ -9,7 +9,7 @@
     "file-saver": "^2.0.2",
     "graphql": "^15.3.0",
     "meteor-node-stubs": "^1.0.1",
-    "moment-timezone": "^0.5.31",
+    "moment-timezone": "^0.5.35",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-addons-pure-render-mixin": "^15.6.2",
